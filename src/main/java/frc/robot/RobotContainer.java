@@ -23,7 +23,7 @@ public class RobotContainer {
   public RobotContainer() {
     DriverOneControls();
     DriverTwoControls();
-    addAutoOptions();    
+    addAutoOptions();     
   }
 
   private void DriverOneControls(){
