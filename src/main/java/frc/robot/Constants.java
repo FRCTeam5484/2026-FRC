@@ -5,6 +5,10 @@ public class Constants {
       public static final int DriverOne = 0;
       public static final int DriverTwo = 1;
     }
+    public static final class LimeLight {
+        public static final String fieldPositionName = "limelight-robot";
+        public static final String shooterTargetingName = "limelight-shooter";
+    }
     public static final class Climb {
       public static final int motorId = 19;
 
