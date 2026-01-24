@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
+import frc.robot.commands.cmdShooter_TeleOp;
 import frc.robot.subsystems.subDrive;
+import frc.robot.subsystems.subShooter;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -36,6 +38,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
     private final CommandXboxController driverOne = new CommandXboxController(0);
     public final subDrive drivetrain = TunerConstants.createDrivetrain();
+    public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -63,6 +66,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
+        driverOne.leftTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverOne.getLeftTriggerAxis()));
+
+        /*
         driverOne.a().whileTrue(drivetrain.applyRequest(() -> brake));
         driverOne.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driverOne.getLeftY(), -driverOne.getLeftX()))
@@ -77,6 +83,7 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         driverOne.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+         */
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

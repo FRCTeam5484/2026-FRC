@@ -22,7 +22,6 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_leftMotor = new TalonFX(Constants.Shooter.leftMotorId, canbus);
   private final TalonFX m_rightMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
-  private final NeutralOut m_brake = new NeutralOut();
   
   public subShooter() {
     
@@ -64,7 +63,7 @@ public class subShooter extends SubsystemBase {
             break;
           case 'R' :
             activeHub = "Red";
-            myHubActive = DriverStation.getAlliance().get().equals(Alliance.Blue) ? true : false;
+            myHubActive = DriverStation.getAlliance().get().equals(Alliance.Red) ? true : false;
             break;
           default :
             activeHub = "NA";
@@ -74,7 +73,17 @@ public class subShooter extends SubsystemBase {
       }
       else{
         activeHub = "NA";
+        myHubActive = false;
       }
     }
+  }
+
+  public void runShooter(double value){
+    value = Math.abs(value) < 0.1 ? 0 : value;
+    double desiredRotationsPerSecond = value * 500;
+    m_leftMotor.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+  }
+  public void stopShooter(){
+    m_leftMotor.stopMotor();
   }
 }
