@@ -25,26 +25,27 @@ public class Constants {
         public static final int extendMotorId = 0;
     }
     public static final class Shooter {
-        public static final int leftMotorId = 0;
-        public static final int rightMotorId = 0;
+        public static final int leftMotorId = 51;
+        public static final int rightMotorId = 52;
     }
     public static final class Drive {
-        public static final int frontLeftDriveMotorId = 0;
-        public static final int frontLeftTurnMotorId = 0;
-        public static final int frontLeftCanId = 0;
+        // These are for reference only.  These IDs are actually configured in /Classes/TunerConstants.java
+        public static final int frontLeftDriveMotorId = 11;
+        public static final int frontLeftTurnMotorId = 12;
+        public static final int frontLeftCanId = 13;
 
-        public static final int frontRightDriveMotorId = 0;
-        public static final int frontRightTurnMotorId = 0;
-        public static final int frontRightCanId = 0;
+        public static final int frontRightDriveMotorId = 21;
+        public static final int frontRightTurnMotorId = 22;
+        public static final int frontRightCanId = 23;
 
-        public static final int backLeftDriveMotorId = 0;
-        public static final int backLeftTurnMotorId = 0;
-        public static final int backLeftCanId = 0;
+        public static final int backLeftDriveMotorId = 31;
+        public static final int backLeftTurnMotorId = 32;
+        public static final int backLeftCanId = 33;
 
-        public static final int backRightDriveMotorId = 0;
-        public static final int backRightTurnMotorId = 0;
-        public static final int backRightCanId = 0;
+        public static final int backRightDriveMotorId = 41;
+        public static final int backRightTurnMotorId = 42;
+        public static final int backRightCanId = 43;
 
-        public static final int PigionId = 0;
+        public static final int PigionId = 1;
     }
 }
