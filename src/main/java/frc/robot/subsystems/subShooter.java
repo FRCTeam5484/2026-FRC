@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -24,7 +26,7 @@ public class subShooter extends SubsystemBase {
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
   
   public subShooter() {
-    
+    BaseStatusSignal.setUpdateFrequencyForAll(200, m_leftMotor.getVelocity());
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
@@ -80,10 +82,13 @@ public class subShooter extends SubsystemBase {
 
   public void runShooter(double value){
     value = Math.abs(value) < 0.1 ? 0 : value;
-    double desiredRotationsPerSecond = value * 500;
+    double desiredRotationsPerSecond = value * 90;
     m_leftMotor.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
   }
   public void stopShooter(){
     m_leftMotor.stopMotor();
+  }
+  public boolean atSpeed(){
+    return m_leftMotor.getClosedLoopError().isNear(0.0, 1.0);
   }
 }
