@@ -35,8 +35,23 @@ public class Robot extends TimedRobot {
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionName, headingDeg, 0, 0, 0, 0, 0);
-        var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionName);
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontLeftName, headingDeg, 0, 0, 0, 0, 0);
+        var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontLeftName);
+        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        }
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontRightName, headingDeg, 0, 0, 0, 0, 0);
+        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontRightName);
+        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        }
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionRearLeftName, headingDeg, 0, 0, 0, 0, 0);
+        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionRearLeftName);
+        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        }
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionRearRightName, headingDeg, 0, 0, 0, 0, 0);
+        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionRearRightName);
         if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
             m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
         }
