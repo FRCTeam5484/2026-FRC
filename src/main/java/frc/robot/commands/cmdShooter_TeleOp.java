@@ -10,11 +10,13 @@ public class cmdShooter_TeleOp extends Command {
   DoubleSupplier m_shooterStickValue;
   DoubleSupplier m_turretStickValue;
   DoubleSupplier m_angleStickValue;
-  public cmdShooter_TeleOp(subShooter shooter, DoubleSupplier shooterStickValue, DoubleSupplier turretStickValue, DoubleSupplier angleStickValue) {
+  DoubleSupplier m_feederStickValue;
+  public cmdShooter_TeleOp(subShooter shooter, DoubleSupplier shooterStickValue, DoubleSupplier turretStickValue, DoubleSupplier angleStickValue, DoubleSupplier feederStickValue) {
     m_shooter = shooter;
     m_shooterStickValue = shooterStickValue;
     m_turretStickValue = turretStickValue;
     m_angleStickValue = angleStickValue;
+    m_feederStickValue = feederStickValue;
     addRequirements(m_shooter);
   }
 
@@ -26,6 +28,7 @@ public class cmdShooter_TeleOp extends Command {
     m_shooter.ShooterTeleOp(m_shooterStickValue.getAsDouble());
     m_shooter.TurretTeleOp(m_turretStickValue.getAsDouble());
     m_shooter.AngleTeleOp(m_angleStickValue.getAsDouble());
+    m_shooter.FeederTeleOp(m_feederStickValue.getAsDouble());
   }
 
   @Override
@@ -33,6 +36,7 @@ public class cmdShooter_TeleOp extends Command {
     m_shooter.stopShooter();
     m_shooter.stopTurret();
     m_shooter.stopAngle();
+    m_shooter.stopFeeder();
   }
 
   @Override

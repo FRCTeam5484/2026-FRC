@@ -32,14 +32,18 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightLaunchMotorId, canbus);  
   private final TalonFX m_angleMotor = new TalonFX(Constants.Shooter.angleMotorId, canbus); 
   private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
+  private final TalonFX m_feederMotor = new TalonFX(Constants.Shooter.feederMotorId, canbus); 
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_turretPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final PositionVoltage m_anglePositionVoltage = new PositionVoltage(0).withSlot(0);
+  private final VelocityVoltage m_feederVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
   
   public subShooter() {
     ConfigureShooter();
+    ConfigureTurret();
     ConfigureAngle();
+    ConfigureFeeder();
   }
 
   @Override
@@ -127,6 +131,29 @@ public class subShooter extends SubsystemBase {
     /* Make sure we start at 0 */
     m_angleMotor.setPosition(0);
   }
+  private void ConfigureFeeder(){
+    BaseStatusSignal.setUpdateFrequencyForAll(80, m_feederMotor.getVelocity());
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+
+    /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
+    configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward
+    configs.Slot0.kV = 0.12; // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
+    configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 0.11 V output
+    configs.Slot0.kI = 0; // No output for integrated error
+    configs.Slot0.kD = 0; // No output for error derivative
+    // Peak output of 8 volts
+    configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
+
+     /* Retry config apply up to 5 times, report if failure */
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status = m_feederMotor.getConfigurator().apply(configs);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not apply configs, error code: " + status.toString());
+    }
+  }
   
   public void ShooterTeleOp(double joystickValue) {
     m_leftLaunchMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
@@ -136,6 +163,9 @@ public class subShooter extends SubsystemBase {
   }
   public void AngleTeleOp(double joystickValue) {
     m_angleMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
+  }
+  public void FeederTeleOp(double joystickValue) {
+    m_feederMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
   }
 
   public void setShooterRPM(double rps) {
@@ -168,6 +198,10 @@ public class subShooter extends SubsystemBase {
     else{
       m_angleMotor.setControl(m_anglePositionVoltage.withPosition(desiredRotations));
     }
+  }
+  public void setFeederRPM(double rps) {
+    double desiredRotationsPerSecond = Math.abs(rps) < 0.1 ? 0 : rps * 90;
+    m_feederMotor.setControl(m_feederVelocityVoltage.withVelocity(desiredRotationsPerSecond));
   }
   
   public void isShooterAtSpeed() {
@@ -215,5 +249,8 @@ public class subShooter extends SubsystemBase {
   }
   public void stopAngle() {
     m_angleMotor.stopMotor();
+  }
+  public void stopFeeder(){
+    m_feederMotor.stopMotor();
   }
 }

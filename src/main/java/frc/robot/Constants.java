@@ -20,9 +20,6 @@ public class Constants {
         public static final double pullPosition = 0;
         public static final double topPosition = 0;
     }
-    public static final class Feeder {
-        public static final int motorId = 70;
-    }
     public static final class Intake {
         public static final int feedMotorId = 80;
         public static final int extendMotorId = 81;
@@ -35,6 +32,7 @@ public class Constants {
         public static final int rightLaunchMotorId = 52;
         public static final int turretMotorId = 53;
         public static final int angleMotorId = 54;
+        public static final int feederMotorId = 55;
 
         public static final double turretClockwiseLimit = 0;
         public static final double turretCounterClockwiseLimit = 0;

@@ -54,31 +54,17 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-        shooter.setDefaultCommand(new cmdShooter_TeleOp(shooter, ()->-driverOne.getLeftY(), ()->driverOne.getRightX(), ()->-driverOne.getRightY()));
+        shooter.setDefaultCommand(new cmdShooter_TeleOp(
+            shooter, // Pass in Shooter SubSystem
+            ()->-driverOne.getLeftY(), // Pass in Left Y for Shooter Speed
+            ()->driverOne.getRightX(), // Pass in Right X for Turret Position
+            ()->-driverOne.getRightY(), // Pass in Right Y for Angel Position
+            ()->driverOne.getLeftTriggerAxis() // Pass in Left Trigger for Shooter Feeder
+            ));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
-        final var idle = new SwerveRequest.Idle();
-        RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-        );
-
-        /*
-        driverOne.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverOne.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverOne.getLeftY(), -driverOne.getLeftX()))
-        ));
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        driverOne.back().and(driverOne.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverOne.back().and(driverOne.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverOne.start().and(driverOne.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverOne.start().and(driverOne.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // Reset the field-centric heading on left bumper press.
-        driverOne.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-         */
+        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
