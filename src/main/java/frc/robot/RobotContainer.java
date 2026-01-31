@@ -54,6 +54,7 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+        shooter.setDefaultCommand(new cmdShooter_TeleOp(shooter, ()->-driverOne.getLeftY(), ()->driverOne.getRightX(), ()->-driverOne.getRightY()));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -61,8 +62,6 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-
-        driverOne.leftTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverOne.getLeftTriggerAxis()));
 
         /*
         driverOne.a().whileTrue(drivetrain.applyRequest(() -> brake));

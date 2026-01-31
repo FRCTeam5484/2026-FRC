@@ -2,8 +2,8 @@ package frc.robot;
 
 public class Constants {
     public static final class Operators {
-      public static final int DriverOne = 0;
-      public static final int DriverTwo = 1;
+        public static final int DriverOne = 0;
+        public static final int DriverTwo = 1;
     }
     public static final class LimeLight {
         public static final String fieldPositionFrontLeftName = "limelight-robot-frontleft";
@@ -13,23 +13,34 @@ public class Constants {
         public static final String shooterTargetingName = "limelight-shooter";
     }
     public static final class Climb {
-      public static final int motorId = 19;
+        public static final int motorId = 19;
 
-      public static final double bottomPosition = 0;
-      public static final double upPosition = 0;
-      public static final double pullPosition = 0;
-      public static final double topPosition = 0;
+        public static final double bottomPosition = 0;
+        public static final double upPosition = 0;
+        public static final double pullPosition = 0;
+        public static final double topPosition = 0;
     }
     public static final class Feeder {
-        public static final int motorId = 0;
+        public static final int motorId = 70;
     }
     public static final class Intake {
-        public static final int feedMotorId = 0;
-        public static final int extendMotorId = 0;
+        public static final int feedMotorId = 80;
+        public static final int extendMotorId = 81;
+
+        public static final double retactedLimit = 0;
+        public static final double extendedLimit = 0;
     }
     public static final class Shooter {
-        public static final int leftMotorId = 51;
-        public static final int rightMotorId = 52;
+        public static final int leftLaunchMotorId = 51;
+        public static final int rightLaunchMotorId = 52;
+        public static final int turretMotorId = 53;
+        public static final int angleMotorId = 54;
+
+        public static final double turretClockwiseLimit = 0;
+        public static final double turretCounterClockwiseLimit = 0;
+
+        public static final double angleBottomPosition = 0;
+        public static final double angleTopPosition = 0;
     }
     public static final class Drive {
         // These are for reference only.  These IDs are actually configured in /Classes/TunerConstants.java
