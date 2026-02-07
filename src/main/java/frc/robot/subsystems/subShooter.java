@@ -165,14 +165,14 @@ public class subShooter extends SubsystemBase {
     //m_turretMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
   }
   public void AngleTeleOp(double joystickValue) {
-    m_angleMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
+    m_angleMotor.set(Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue);
   }
   public void FeederTeleOp(double joystickValue) {
     m_feederMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
   }
 
   public void setShooterRPM(double rps) {
-    double desiredRotationsPerSecond = Math.abs(rps) < 0.1 ? 0 : rps * 90;
+    double desiredRotationsPerSecond = Math.abs(rps) < 0.01 ? 0 : rps * 90;
     m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(desiredRotationsPerSecond));
   }
   public void setTurretPosition(double position) {

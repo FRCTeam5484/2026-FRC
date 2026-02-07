@@ -22,7 +22,9 @@ public class Constants {
     }
     public static final class Intake {
         public static final int bedMotorId = 50;
-        public static final int extendMotorId = 81;
+        public static final int intakeMotorId = 56;
+        public static final int leftExtendMotorId = 57;
+        public static final int rightExtendMotorId = 57;
 
         public static final double retactedLimit = 0;
         public static final double extendedLimit = 0;
