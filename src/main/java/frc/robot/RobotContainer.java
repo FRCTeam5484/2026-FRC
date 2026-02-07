@@ -47,6 +47,7 @@ public class RobotContainer {
     }
 
     private void configureDriverOneControls() {
+        /*
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
@@ -54,6 +55,7 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+         */
         shooter.setDefaultCommand(new cmdShooter_TeleOp(
             shooter, // Pass in Shooter SubSystem
             ()->-driverOne.getLeftY(), // Pass in Left Y for Shooter Speed

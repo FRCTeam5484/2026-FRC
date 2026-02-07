@@ -27,7 +27,7 @@ public class cmdShooter_TeleOp extends Command {
   public void execute() {
     m_shooter.ShooterTeleOp(m_shooterStickValue.getAsDouble());
     m_shooter.TurretTeleOp(m_turretStickValue.getAsDouble());
-    m_shooter.AngleTeleOp(m_angleStickValue.getAsDouble());
+    m_shooter.AngleTeleOp(m_angleStickValue.getAsDouble()*0.1);
     m_shooter.FeederTeleOp(m_feederStickValue.getAsDouble());
   }
 

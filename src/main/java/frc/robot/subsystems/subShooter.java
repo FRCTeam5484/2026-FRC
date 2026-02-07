@@ -31,7 +31,7 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftLaunchMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightLaunchMotorId, canbus);  
   private final TalonFX m_angleMotor = new TalonFX(Constants.Shooter.angleMotorId, canbus); 
-  private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
+  //private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
   private final TalonFX m_feederMotor = new TalonFX(Constants.Shooter.feederMotorId, canbus); 
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_turretPositionVoltage = new PositionVoltage(0).withSlot(0);
@@ -41,7 +41,7 @@ public class subShooter extends SubsystemBase {
   
   public subShooter() {
     ConfigureShooter();
-    ConfigureTurret();
+    //ConfigureTurret();
     ConfigureAngle();
     ConfigureFeeder();
   }
@@ -54,6 +54,7 @@ public class subShooter extends SubsystemBase {
   }
 
   private void ConfigureShooter(){
+    
     BaseStatusSignal.setUpdateFrequencyForAll(200, m_leftLaunchMotor.getVelocity());
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -91,18 +92,20 @@ public class subShooter extends SubsystemBase {
     // Peak output of 120 A
     configs.TorqueCurrent.withPeakForwardTorqueCurrent(Amps.of(120)).withPeakReverseTorqueCurrent(Amps.of(-120));
 
-    /* Retry config apply up to 5 times, report if failure */
+    // Retry config apply up to 5 times, report if failure
+     
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = m_turretMotor.getConfigurator().apply(configs);
+      //status = m_turretMotor.getConfigurator().apply(configs);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
 
-    /* Make sure we start at 0 */
-    m_turretMotor.setPosition(0);
+    // Make sure we start at 0
+    //m_turretMotor.setPosition(0);
+    
   }
   private void ConfigureAngle(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -118,7 +121,7 @@ public class subShooter extends SubsystemBase {
     // Peak output of 120 A
     configs.TorqueCurrent.withPeakForwardTorqueCurrent(Amps.of(120)).withPeakReverseTorqueCurrent(Amps.of(-120));
 
-    /* Retry config apply up to 5 times, report if failure */
+    // Retry config apply up to 5 times, report if failure 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_angleMotor.getConfigurator().apply(configs);
@@ -128,14 +131,14 @@ public class subShooter extends SubsystemBase {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
 
-    /* Make sure we start at 0 */
+    // Make sure we start at 0
     m_angleMotor.setPosition(0);
   }
   private void ConfigureFeeder(){
     BaseStatusSignal.setUpdateFrequencyForAll(80, m_feederMotor.getVelocity());
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
+    // Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor
     configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward
     configs.Slot0.kV = 0.12; // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
     configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 0.11 V output
@@ -144,7 +147,7 @@ public class subShooter extends SubsystemBase {
     // Peak output of 8 volts
     configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
 
-     /* Retry config apply up to 5 times, report if failure */
+     // Retry config apply up to 5 times, report if failure
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_feederMotor.getConfigurator().apply(configs);
@@ -159,7 +162,7 @@ public class subShooter extends SubsystemBase {
     m_leftLaunchMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
   }
   public void TurretTeleOp(double joystickValue) {
-    m_turretMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
+    //m_turretMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
   }
   public void AngleTeleOp(double joystickValue) {
     m_angleMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
@@ -179,10 +182,10 @@ public class subShooter extends SubsystemBase {
     }
 
     if(desiredRotations == 0){
-      m_turretMotor.setControl(m_brake);
+      //m_turretMotor.setControl(m_brake);
     }
     else{
-      m_turretMotor.setControl(m_turretPositionVoltage.withPosition(desiredRotations));
+      //m_turretMotor.setControl(m_turretPositionVoltage.withPosition(desiredRotations));
     }
   }
   public void setAnglePosition(double position)
@@ -208,7 +211,7 @@ public class subShooter extends SubsystemBase {
     shooterAtSpeed = m_leftLaunchMotor.getClosedLoopError().isNear(shooterRPM, 1.0);
   }
   public void isTurretOnTarget() {
-    turretOnTarget = m_turretMotor.getClosedLoopError().isNear(turretPosition,1.0);
+    //turretOnTarget = m_turretMotor.getClosedLoopError().isNear(turretPosition,1.0);
   }
   public void isAngleOnTarget() {
     angleOnTarget = m_angleMotor.getClosedLoopError().isNear(anglePosition,1.0);
@@ -245,7 +248,7 @@ public class subShooter extends SubsystemBase {
     m_leftLaunchMotor.stopMotor();
   }
   public void stopTurret() {
-    m_turretMotor.stopMotor();
+    //m_turretMotor.stopMotor();
   }
   public void stopAngle() {
     m_angleMotor.stopMotor();

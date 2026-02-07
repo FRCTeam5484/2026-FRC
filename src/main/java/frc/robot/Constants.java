@@ -21,7 +21,7 @@ public class Constants {
         public static final double topPosition = 0;
     }
     public static final class Intake {
-        public static final int feedMotorId = 80;
+        public static final int bedMotorId = 50;
         public static final int extendMotorId = 81;
 
         public static final double retactedLimit = 0;
