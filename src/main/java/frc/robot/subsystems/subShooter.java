@@ -30,7 +30,7 @@ public class subShooter extends SubsystemBase {
   private final CANBus canbus = new CANBus("canivore");
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftLaunchMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightLaunchMotorId, canbus);  
-  private final TalonFX m_angleMotor = new TalonFX(Constants.Shooter.angleMotorId, canbus); 
+  private final TalonFX m_angleMotor = new TalonFX(Constants.Shooter.hoodMotorId, canbus); 
   //private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
   private final TalonFX m_feederMotor = new TalonFX(Constants.Shooter.feederMotorId, canbus); 
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);

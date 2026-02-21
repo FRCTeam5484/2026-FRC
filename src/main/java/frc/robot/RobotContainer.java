@@ -47,7 +47,7 @@ public class RobotContainer {
     }
 
     private void configureDriverOneControls() {
-        /*
+        
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
@@ -55,7 +55,7 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-         */
+         /*
         shooter.setDefaultCommand(new cmdShooter_TeleOp(
             shooter, // Pass in Shooter SubSystem
             ()->-driverOne.getLeftY(), // Pass in Left Y for Shooter Speed
@@ -63,7 +63,7 @@ public class RobotContainer {
             ()->-driverOne.getRightY(), // Pass in Right Y for Angel Position
             ()->driverOne.getLeftTriggerAxis() // Pass in Left Trigger for Shooter Feeder
             ));
-
+*/
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
