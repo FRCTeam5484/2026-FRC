@@ -1,13 +1,18 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,14 +23,21 @@ public class subHood extends SubsystemBase {
   private final TalonFX m_hoodMotor = new TalonFX(Constants.Shooter.hoodMotorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
+  private final CANcoder m_cancoder = new CANcoder(Constants.Shooter.hoodEncoder, canbus);
   
   public subHood() {
     ConfigureHood();
+    var toApply = new CANcoderConfiguration();
+    m_cancoder.getConfigurator().apply(toApply);
+    BaseStatusSignal.setUpdateFrequencyForAll(100, m_cancoder.getPosition(), m_cancoder.getVelocity());
   }
 
   @Override
   public void periodic() {
-    isOnTarget();
+    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(hoodPosition,1.0);
+    hoodPosition = m_cancoder.getPosition().getValueAsDouble();
+    SmartDashboard.putBoolean("Hood On Target", hoodOnTarget);
+    SmartDashboard.putNumber("Hood Encoder", hoodPosition);
   }
 
   private void ConfigureHood(){
@@ -67,10 +79,6 @@ public class subHood extends SubsystemBase {
     else{
       m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(desiredRotations));
     }
-  }
-
-  public void isOnTarget() {
-    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(hoodPosition,1.0);
   }
 
   public void Stop() {

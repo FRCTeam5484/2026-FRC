@@ -5,8 +5,11 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -17,13 +20,17 @@ public class subTurret extends SubsystemBase {
   private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
   private final PositionVoltage m_turretPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
+  //private final CANcoder m_cancoder = new CANcoder(Constants.Shooter.turretEncoder, canbus);
   public subTurret() {
     ConfigureTurret();
   }
 
   @Override
   public void periodic() {
-    isOnTarget();
+    //turretOnTarget = m_turretMotor.getClosedLoopError().isNear(turretPosition,1.0);
+    //turretPosition = m_cancoder.getPosition().getValueAsDouble();
+    //SmartDashboard.putBoolean("Turret On Target", turretOnTarget);
+    //SmartDashboard.putNumber("Turret Encoder", turretPosition);
   }
   private void ConfigureTurret(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -64,9 +71,6 @@ public class subTurret extends SubsystemBase {
     else{
       m_turretMotor.setControl(m_turretPositionVoltage.withPosition(desiredRotations));
     }
-  }
-  public void isOnTarget() {
-    turretOnTarget = m_turretMotor.getClosedLoopError().isNear(turretPosition,1.0);
   }
   public void Stop() {
     m_turretMotor.stopMotor();
