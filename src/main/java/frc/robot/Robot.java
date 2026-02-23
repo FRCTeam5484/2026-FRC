@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        m_robotContainer.ConfigureTeleOpControls();
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
@@ -99,6 +100,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        m_robotContainer.ConfigureTestControls();
         CommandScheduler.getInstance().cancelAll();
     }
 

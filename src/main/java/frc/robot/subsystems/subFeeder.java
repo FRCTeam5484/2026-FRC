@@ -3,24 +3,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class subClimb extends SubsystemBase {
+public class subFeeder extends SubsystemBase {
   private final CANBus canbus = new CANBus("canivore");
-  private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
-
-  public subClimb() {
-    configureClimb();
+  private final TalonFX m_feederMotor = new TalonFX(Constants.Shooter.feederMotorId, canbus); 
+  private final VelocityVoltage m_feederVelocityVoltage = new VelocityVoltage(0).withSlot(0);
+  public subFeeder() {
+    ConfigureFeeder();
   }
 
   @Override
-  public void periodic() {
-
-  }
-  private void configureClimb(){
+  public void periodic() {}
+  private void ConfigureFeeder(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     // Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor
@@ -35,17 +34,20 @@ public class subClimb extends SubsystemBase {
      // Retry config apply up to 5 times, report if failure
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = m_climbMotor.getConfigurator().apply(configs);
+      status = m_feederMotor.getConfigurator().apply(configs);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
   }
-  public void TeleOp(double value){
-    m_climbMotor.set(value);
+  public void TeleOp(double joystickValue) {
+    m_feederMotor.set(Math.abs(joystickValue) <= 0.05 ? 0 : joystickValue);
+  }
+  public void setFeederRPM(double rps) {
+    m_feederMotor.setControl(m_feederVelocityVoltage.withVelocity(rps * 90));
   }
   public void Stop(){
-    m_climbMotor.stopMotor();
+    m_feederMotor.stopMotor();
   }
 }

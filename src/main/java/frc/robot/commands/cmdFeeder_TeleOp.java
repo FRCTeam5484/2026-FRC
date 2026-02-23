@@ -3,15 +3,15 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.subShooter;
+import frc.robot.subsystems.subFeeder;
 
-public class cmdShooter_TeleOp extends Command {
-  subShooter m_shooter;
+public class cmdFeeder_TeleOp extends Command {
+  subFeeder m_feeder;
   DoubleSupplier m_speed;
-  public cmdShooter_TeleOp(subShooter shooter, DoubleSupplier speed) {
-    m_shooter = shooter;
+  public cmdFeeder_TeleOp(subFeeder feeder, DoubleSupplier speed) {
+    m_feeder = feeder;
     m_speed = speed;
-    addRequirements(m_shooter);
+    addRequirements(m_feeder);
   }
 
   @Override
@@ -19,12 +19,12 @@ public class cmdShooter_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_shooter.TeleOp(m_speed.getAsDouble());
+    m_feeder.TeleOp(m_speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_shooter.Stop();
+    m_feeder.Stop();
   }
 
   @Override

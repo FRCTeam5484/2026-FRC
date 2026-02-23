@@ -8,19 +8,19 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class subClimb extends SubsystemBase {
+public class subHopper extends SubsystemBase {
   private final CANBus canbus = new CANBus("canivore");
-  private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
-
-  public subClimb() {
-    configureClimb();
+  private final TalonFX m_hopperMotor = new TalonFX(Constants.Intake.hopperMotorId, canbus);
+  public subHopper() {
+    configureHopper();
   }
 
   @Override
   public void periodic() {
-
+    // This method will be called once per scheduler run
   }
-  private void configureClimb(){
+
+  private void configureHopper(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     // Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor
@@ -35,7 +35,7 @@ public class subClimb extends SubsystemBase {
      // Retry config apply up to 5 times, report if failure
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = m_climbMotor.getConfigurator().apply(configs);
+      status = m_hopperMotor.getConfigurator().apply(configs);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -43,9 +43,9 @@ public class subClimb extends SubsystemBase {
     }
   }
   public void TeleOp(double value){
-    m_climbMotor.set(value);
+    m_hopperMotor.set(value);
   }
   public void Stop(){
-    m_climbMotor.stopMotor();
+    m_hopperMotor.stopMotor();
   }
 }

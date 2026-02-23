@@ -1,0 +1,79 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import static edu.wpi.first.units.Units.*;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
+public class subHood extends SubsystemBase {
+  public boolean hoodOnTarget = false;
+  public double hoodPosition = 0;
+  private final CANBus canbus = new CANBus("canivore");
+  private final TalonFX m_hoodMotor = new TalonFX(Constants.Shooter.hoodMotorId, canbus); 
+  private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
+  private final NeutralOut m_brake = new NeutralOut();
+  
+  public subHood() {
+    ConfigureHood();
+  }
+
+  @Override
+  public void periodic() {
+    isOnTarget();
+  }
+
+  private void ConfigureHood(){
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+    configs.Slot0.kI = 0; // No output for integrated error
+    configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    // Peak output of 8 V
+    configs.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
+
+    // Retry config apply up to 5 times, report if failure 
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status = m_hoodMotor.getConfigurator().apply(configs);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not apply configs, error code: " + status.toString());
+    }
+
+    // Make sure we start at 0
+    m_hoodMotor.setPosition(0);
+  }
+
+  public void TeleOp(double joystickValue) {
+    m_hoodMotor.set(Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue);
+  }
+
+  public void setPosition(double position)
+  {
+    double desiredRotations = position * 10; // Go for plus/minus 10 rotations
+    if (Math.abs(desiredRotations) <= 0.1) { // Joystick deadzone
+      desiredRotations = 0;
+    }
+
+    if(desiredRotations == 0){
+      m_hoodMotor.setControl(m_brake);
+    }
+    else{
+      m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(desiredRotations));
+    }
+  }
+
+  public void isOnTarget() {
+    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(hoodPosition,1.0);
+  }
+
+  public void Stop() {
+    m_hoodMotor.stopMotor();
+  }
+}

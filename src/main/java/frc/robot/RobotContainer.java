@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,9 +18,23 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
+import frc.robot.commands.cmdBed_TeleOp;
+import frc.robot.commands.cmdClimb_TeleOp;
+import frc.robot.commands.cmdFeeder_TeleOp;
+import frc.robot.commands.cmdHood_TeleOp;
+import frc.robot.commands.cmdHopper_TeleOp;
+import frc.robot.commands.cmdIntake_TeleOp;
+import frc.robot.commands.cmdTurret_TeleOp;
 import frc.robot.commands.cmdShooter_TeleOp;
+import frc.robot.subsystems.subBed;
+import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
+import frc.robot.subsystems.subFeeder;
+import frc.robot.subsystems.subHopper;
+import frc.robot.subsystems.subIntake;
 import frc.robot.subsystems.subShooter;
+import frc.robot.subsystems.subTurret;
+import frc.robot.subsystems.subHood;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -33,7 +48,15 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(MaxSpeed);
     private final CommandXboxController driverOne = new CommandXboxController(0);
+    private final CommandXboxController driverTwo = new CommandXboxController(1);
     public final subDrive drivetrain = TunerConstants.createDrivetrain();
+    public final subBed bed = new subBed();
+    public final subClimb climb = new subClimb();
+    public final subFeeder feeder = new subFeeder();
+    public final subHopper hopper = new subHopper();
+    public final subIntake intake = new subIntake();
+    public final subHood hood = new subHood();
+    public final subTurret turret = new subTurret();
     public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
 
@@ -48,6 +71,17 @@ public class RobotContainer {
 
     private void configureDriverOneControls() {
         
+    }
+
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
+
+    public void ConfigureTeleOpControls(){
+        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
+        drivetrain.registerTelemetry(logger::telemeterize);
+
+        // DriverOne Controls
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
@@ -55,23 +89,57 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-         /*
-        shooter.setDefaultCommand(new cmdShooter_TeleOp(
-            shooter, // Pass in Shooter SubSystem
-            ()->-driverOne.getLeftY(), // Pass in Left Y for Shooter Speed
-            ()->driverOne.getRightX(), // Pass in Right X for Turret Position
-            ()->-driverOne.getRightY(), // Pass in Right Y for Angel Position
-            ()->driverOne.getLeftTriggerAxis() // Pass in Left Trigger for Shooter Feeder
-            ));
-*/
-        // Idle while the robot is disabled. This ensures the configured
-        // neutral mode is applied to the drive motors while disabled.
-        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        // DriverTwo Controls
+
     }
+    public void ConfigureTestControls(){
+        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
+        drivetrain.registerTelemetry(logger::telemeterize);
 
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        /////////////////////////
+        /*  DriverOne Controls */
+        /////////////////////////
+        /// 
+        /// Drive Controls
+        drivetrain.setDefaultCommand(
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverOne.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
+        
+        /// Intake Controls
+        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->driverOne.getLeftTriggerAxis()));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-driverOne.getRightTriggerAxis()));
+
+        /// Hopper Controls
+        driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-1));
+        driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->1));
+
+        /////////////////////////
+        /*  DriverTwo Controls */
+        /////////////////////////
+        
+        /// Bed Controls
+        driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
+        driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
+        
+        /// Climb Control
+        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->-driverTwo.getLeftY()));
+
+        /// Turret Control
+        driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-0.5));
+        driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->0.5));
+
+        /// Hood Control
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
+
+        /// Shooter Control
+        driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
+
+        /// Feeder Control 
+        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->1));
     }
 }
