@@ -130,8 +130,8 @@ public class RobotContainer {
         climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->-driverTwo.getLeftY()));
 
         /// Turret Control
-        driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-0.5));
-        driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->0.5));
+        driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-1));
+        driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->1));
 
         /// Hood Control
         hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
@@ -140,6 +140,6 @@ public class RobotContainer {
         driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
 
         /// Feeder Control 
-        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->1));
+        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
     }
 }

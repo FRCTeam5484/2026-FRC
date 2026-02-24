@@ -38,7 +38,7 @@ public class subTurret extends SubsystemBase {
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
     // Peak output of 8 V
-    configs.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
+    configs.Voltage.withPeakForwardVoltage(Volts.of(12)).withPeakReverseVoltage(Volts.of(-12));
 
     // Retry config apply up to 5 times, report if failure
      
