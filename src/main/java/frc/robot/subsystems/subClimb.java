@@ -3,18 +3,20 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class subClimb extends SubsystemBase {
   private final CANBus canbus = new CANBus("canivore");
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
+  //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
 
   public subClimb() {
     configureClimb();
@@ -22,7 +24,7 @@ public class subClimb extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    //SmartDashboard.putNumber("Climb Encoder", m_cancoder.getPosition().getValueAsDouble());
   }
   private void configureClimb(){
     TalonFXConfiguration configs = new TalonFXConfiguration();

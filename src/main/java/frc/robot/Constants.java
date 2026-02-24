@@ -12,6 +12,7 @@ public class Constants {
     }
     public static final class Climb {
         public static final int motorId = 15;
+        public static final int canCoderId = 29;
 
         public static final double bottomPosition = 0;
         public static final double upPosition = 0;

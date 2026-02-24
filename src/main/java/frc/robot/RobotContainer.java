@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
+import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdBed_TeleOp;
 import frc.robot.commands.cmdClimb_TeleOp;
 import frc.robot.commands.cmdFeeder_TeleOp;
@@ -141,5 +142,8 @@ public class RobotContainer {
 
         /// Feeder Control 
         driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
+
+        /// Auto Functions
+        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter));
     }
 }
