@@ -36,6 +36,7 @@ public class Constants {
 
         public static final int hoodEncoder = 20;
         public static final int turretEncoder = 25;
+        public static final int hopperEncoderId = 26;
 
         public static final double turretClockwiseLimit = 0;
         public static final double turretCounterClockwiseLimit = 0;

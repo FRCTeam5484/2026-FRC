@@ -3,23 +3,27 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class subHopper extends SubsystemBase {
   private final CANBus canbus = new CANBus("canivore");
   private final TalonFX m_hopperMotor = new TalonFX(Constants.Intake.hopperMotorId, canbus);
+  //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
   public subHopper() {
     configureHopper();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    //SmartDashboard.putNumber("Hopper Encoder", m_cancoder.getPosition().getValueAsDouble());
   }
 
   private void configureHopper(){

@@ -141,7 +141,7 @@ public class RobotContainer {
         driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
 
         /// Feeder Control 
-        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
+        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->1));
 
         /// Auto Functions
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter));
