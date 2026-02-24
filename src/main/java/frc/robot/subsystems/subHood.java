@@ -10,6 +10,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,6 +62,7 @@ public class subHood extends SubsystemBase {
 
     // Make sure we start at 0
     m_hoodMotor.setPosition(0);
+    m_hoodMotor.setNeutralMode(NeutralModeValue.Brake);
   }
 
   public void TeleOp(double joystickValue) {

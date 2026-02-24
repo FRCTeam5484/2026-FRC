@@ -7,6 +7,8 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +55,7 @@ public class subTurret extends SubsystemBase {
 
     // Make sure we start at 0
     //m_turretMotor.setPosition(0);
+    m_turretMotor.setNeutralMode(NeutralModeValue.Brake);
     
   }
   

@@ -38,7 +38,6 @@ public class subShooter extends SubsystemBase {
   }
 
   private void ConfigureShooter(){
-    
     BaseStatusSignal.setUpdateFrequencyForAll(200, m_leftLaunchMotor.getVelocity());
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -48,8 +47,7 @@ public class subShooter extends SubsystemBase {
     configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 0.11 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0; // No output for error derivative
-    // Peak output of 8 volts
-    configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
+    configs.Voltage.withPeakForwardVoltage(Volts.of(12)).withPeakReverseVoltage(Volts.of(-12));
 
      /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
