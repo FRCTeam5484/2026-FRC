@@ -56,7 +56,7 @@ public class RobotContainer {
     public final subFeeder feeder = new subFeeder();
     public final subHopper hopper = new subHopper();
     public final subIntake intake = new subIntake();
-    public final subHood hood = new subHood();
+    //public final subHood hood = new subHood();
     public final subTurret turret = new subTurret();
     public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
@@ -139,7 +139,7 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->1));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
+        //hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
 
         /// Shooter Control
         driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
