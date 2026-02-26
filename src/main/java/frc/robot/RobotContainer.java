@@ -56,7 +56,7 @@ public class RobotContainer {
     public final subFeeder feeder = new subFeeder();
     public final subHopper hopper = new subHopper();
     public final subIntake intake = new subIntake();
-    //public final subHood hood = new subHood();
+    public final subHood hood = new subHood();
     public final subTurret turret = new subTurret();
     public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
@@ -113,8 +113,8 @@ public class RobotContainer {
         );
         
         /// Intake Controls
-        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->driverOne.getLeftTriggerAxis()));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.22));
+        //driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->driverOne.getLeftTriggerAxis()));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.25));
 
         /// Hopper Controls
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
@@ -125,11 +125,12 @@ public class RobotContainer {
         /////////////////////////
         
         /// Bed Controls
-        //driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
-        //driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
+        driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
+        driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
+        driverTwo.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
         
-        driverTwo.a().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
-        driverTwo.b().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
+        //driverTwo.a().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
+        //driverTwo.b().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
         /// Climb Control
         climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->-driverTwo.getLeftY()));
@@ -139,7 +140,7 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->1));
 
         /// Hood Control
-        //hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
 
         /// Shooter Control
         driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
