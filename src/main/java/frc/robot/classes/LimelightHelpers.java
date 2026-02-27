@@ -1586,4 +1586,9 @@ public class LimelightHelpers {
 
         return results;
     }
+
+    public static void setKeystone(String string, double d, double e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setKeystone'");
+    }
 }

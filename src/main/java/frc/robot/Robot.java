@@ -30,34 +30,24 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
+        UpdatePose();
+    }
 
+    private void UpdatePose(){
         var driveState = m_robotContainer.drivetrain.getState();
         double headingDeg = driveState.Pose.getRotation().getDegrees();
         double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-        /* 
-
-        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontLeftName, headingDeg, 0, 0, 0, 0, 0);
-        var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontLeftName);
-        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontLeft, headingDeg, 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate llFrontMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontLeft);
+        if (llFrontMeasurement != null && llFrontMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            m_robotContainer.drivetrain.addVisionMeasurement(llFrontMeasurement.pose, llFrontMeasurement.timestampSeconds);
         }
-        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontRightName, headingDeg, 0, 0, 0, 0, 0);
-        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontRightName);
-        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionBackRight, headingDeg, 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate llBackMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionBackRight);
+        if (llBackMeasurement != null && llBackMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            m_robotContainer.drivetrain.addVisionMeasurement(llBackMeasurement.pose, llBackMeasurement.timestampSeconds);
         }
-        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionRearLeftName, headingDeg, 0, 0, 0, 0, 0);
-        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionRearLeftName);
-        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
-        }
-        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionRearRightName, headingDeg, 0, 0, 0, 0, 0);
-        llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionRearRightName);
-        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
-        }
-            */
     }
 
     @Override
@@ -71,6 +61,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        m_robotContainer.limelight.configureFrontLeft();
+        m_robotContainer.limelight.configureBackRight();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
