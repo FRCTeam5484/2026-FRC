@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class subClimb extends SubsystemBase {
-  private final CANBus canbus = new CANBus("canivore");
+  private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
 

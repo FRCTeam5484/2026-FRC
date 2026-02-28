@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class subBed extends SubsystemBase {
-  private final CANBus canbus = new CANBus("canivore");
+  private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_bedMotor = new TalonFX(Constants.Intake.bedMotorId, canbus);
   public subBed() {
     configureBed();

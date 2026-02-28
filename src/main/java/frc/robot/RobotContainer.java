@@ -142,11 +142,11 @@ public class RobotContainer {
         climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->-driverTwo.getLeftY()));
 
         /// Turret Control
-        driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-1));
-        driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->1));
+        driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-0.15));
+        driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->0.15));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()));
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()*0.3));
 
         /// Shooter Control
         driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));

@@ -22,7 +22,7 @@ public class subShooter extends SubsystemBase {
   public boolean myHubActive = false;
   public boolean shooterAtSpeed = false;
   public double shooterRPM = 0;
-  private final CANBus canbus = new CANBus("canivore");
+  private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftLaunchMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightLaunchMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);

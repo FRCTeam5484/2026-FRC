@@ -21,7 +21,7 @@ import frc.robot.Constants;
 public class subHood extends SubsystemBase {
   public boolean hoodOnTarget = false;
   public double hoodPosition = 0;
-  private final CANBus canbus = new CANBus("canivore");
+  private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_hoodMotor = new TalonFX(Constants.Shooter.hoodMotorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();

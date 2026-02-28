@@ -8,9 +8,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +16,7 @@ import frc.robot.Constants;
 public class subTurret extends SubsystemBase {
   public boolean turretOnTarget = false;
   public double turretPosition = 0;
-  private final CANBus canbus = new CANBus("canivore");
+  private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_turretMotor = new TalonFX(Constants.Shooter.turretMotorId, canbus); 
   private final PositionVoltage m_turretPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
