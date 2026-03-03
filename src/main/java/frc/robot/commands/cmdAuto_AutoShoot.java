@@ -22,7 +22,7 @@ public class cmdAuto_AutoShoot extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    m_shooter.TeleOp(.6);
+    m_shooter.TeleOp(.8);
   }
 
   @Override

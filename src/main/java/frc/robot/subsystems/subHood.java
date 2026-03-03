@@ -54,6 +54,7 @@ public class subHood extends SubsystemBase {
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_hoodMotor.getConfigurator().apply(configs);
+      m_hoodMotor.setNeutralMode(NeutralModeValue.Brake);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -62,7 +63,7 @@ public class subHood extends SubsystemBase {
 
     // Make sure we start at 0
     m_hoodMotor.setPosition(0);
-    m_hoodMotor.setNeutralMode(NeutralModeValue.Brake);
+    
   }
 
   public void TeleOp(double joystickValue) {

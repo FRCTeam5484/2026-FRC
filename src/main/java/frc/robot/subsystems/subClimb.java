@@ -43,6 +43,7 @@ public class subClimb extends SubsystemBase {
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_climbMotor.getConfigurator().apply(configs);
+      m_climbMotor.setNeutralMode(NeutralModeValue.Brake);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {

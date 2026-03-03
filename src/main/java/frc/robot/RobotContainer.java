@@ -118,9 +118,12 @@ public class RobotContainer {
             )
         );
         
+        /// Reset Heading
+        driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        
         /// Intake Controls
         //driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->driverOne.getLeftTriggerAxis()));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.35));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
 
         /// Hopper Controls
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
