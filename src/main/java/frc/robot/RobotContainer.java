@@ -160,13 +160,17 @@ public class RobotContainer {
         driverThree.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
         driverThree.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
-        /// Bed, Feeder, and Shooter Test Controls
+        /// Bed Test Controls
         driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
         driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
-        driverThree.a().whileTrue(new cmdFeeder_TeleOp(feeder, ()->0.2));
-        driverThree.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-0.2));
-        driverThree.a().whileTrue(new cmdShooter_TeleOp(shooter, ()->0.2));
-        driverThree.b().whileTrue(new cmdShooter_TeleOp(shooter, ()->-0.2));
+        
+        /// Feeder Test Controls
+        driverThree.povUp().whileTrue(new cmdFeeder_TeleOp(feeder, ()->0.2));
+        driverThree.povDown().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-0.2));
+
+        /// Shooter Test Controls
+        driverThree.povLeft().whileTrue(new cmdShooter_TeleOp(shooter, ()->0.2));
+        driverThree.povRight().whileTrue(new cmdShooter_TeleOp(shooter, ()->-0.2));
         
         /// Climb Test Controls
         driverThree.x().whileTrue(new cmdClimb_TeleOp(climb, ()->-0.2));
