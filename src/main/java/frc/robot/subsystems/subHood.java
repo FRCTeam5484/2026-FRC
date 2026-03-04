@@ -22,10 +22,10 @@ public class subHood extends SubsystemBase {
   public boolean hoodOnTarget = false;
   public double hoodPosition = 0;
   private final CANBus canbus = new CANBus("SubSystems");
-  private final TalonFX m_hoodMotor = new TalonFX(Constants.Shooter.hoodMotorId, canbus); 
+  private final TalonFX m_hoodMotor = new TalonFX(Constants.Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
-  private final CANcoder m_cancoder = new CANcoder(Constants.Shooter.hoodEncoder, canbus);
+  private final CANcoder m_cancoder = new CANcoder(Constants.Hood.canEncoderId, canbus);
   
   public subHood() {
     ConfigureHood();
@@ -87,5 +87,6 @@ public class subHood extends SubsystemBase {
 
   public void Stop() {
     m_hoodMotor.stopMotor();
+    m_hoodMotor.setControl(m_brake);
   }
 }

@@ -14,7 +14,7 @@ import frc.robot.Constants;
 
 public class subFeeder extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
-  private final TalonFX m_feederMotor = new TalonFX(Constants.Shooter.feederMotorId, canbus); 
+  private final TalonFX m_feederMotor = new TalonFX(Constants.Feeder.motorId, canbus); 
   private final VelocityVoltage m_feederVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   public subFeeder() {
     ConfigureFeeder();

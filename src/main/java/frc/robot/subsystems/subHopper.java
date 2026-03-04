@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -16,9 +17,10 @@ import frc.robot.Constants;
 
 public class subHopper extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
-  private final TalonFX m_hopperMotor = new TalonFX(Constants.Intake.hopperMotorId, canbus);
+  private final TalonFX m_hopperMotor = new TalonFX(Constants.Hopper.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  private final NeutralOut m_brake = new NeutralOut();
   
   public subHopper() {
     configureHopper();
@@ -60,6 +62,7 @@ public class subHopper extends SubsystemBase {
   }
   public void Stop(){
     m_hopperMotor.stopMotor();
+    m_hopperMotor.setControl(m_brake);
   }
   public void SetHopperPosition(double position){
     m_hopperMotor.setControl(m_positionVoltage.withPosition(position));

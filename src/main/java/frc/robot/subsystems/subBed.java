@@ -10,7 +10,7 @@ import frc.robot.Constants;
 
 public class subBed extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
-  private final TalonFX m_bedMotor = new TalonFX(Constants.Intake.bedMotorId, canbus);
+  private final TalonFX m_bedMotor = new TalonFX(Constants.Bed.motorId, canbus);
   public subBed() {
     configureBed();
   }

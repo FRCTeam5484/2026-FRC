@@ -24,13 +24,13 @@ import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
 import frc.robot.commands.cmdAuto_HopperExtend;
+import frc.robot.commands.cmdAuto_Unjam;
 import frc.robot.commands.cmdBed_TeleOp;
 import frc.robot.commands.cmdClimb_TeleOp;
 import frc.robot.commands.cmdFeeder_TeleOp;
 import frc.robot.commands.cmdHood_TeleOp;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
-import frc.robot.commands.cmdTurret_TeleOp;
 import frc.robot.commands.cmdShooter_TeleOp;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
@@ -40,7 +40,6 @@ import frc.robot.subsystems.subHopper;
 import frc.robot.subsystems.subIntake;
 import frc.robot.subsystems.subLimeLight;
 import frc.robot.subsystems.subShooter;
-import frc.robot.subsystems.subTurret;
 import frc.robot.subsystems.subHood;
 
 public class RobotContainer {
@@ -56,6 +55,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
     private final CommandXboxController driverOne = new CommandXboxController(0);
     private final CommandXboxController driverTwo = new CommandXboxController(1);
+    private final CommandXboxController driverThree = new CommandXboxController(2);
     public final subLimeLight limelight = new subLimeLight();
     public final subDrive drivetrain = TunerConstants.createDrivetrain();
     public final subBed bed = new subBed();
@@ -64,7 +64,6 @@ public class RobotContainer {
     public final subHopper hopper = new subHopper();
     public final subIntake intake = new subIntake();
     public final subHood hood = new subHood();
-    //public final subTurret turret = new subTurret();
     public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
 
@@ -73,7 +72,7 @@ public class RobotContainer {
         limelight.configureBackRight();
 
         // Named Commands
-        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter).withTimeout(3));
+        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake).withTimeout(4));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
@@ -96,25 +95,9 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        // DriverOne Controls
-        drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverOne.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
-
-        // DriverTwo Controls
-
-    }
-    public void ConfigureTestControls(){
-        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-        /////////////////////////
-        /*  DriverOne Controls */
-        /////////////////////////
+        /////////////////////////////////////
+        /*  DriverOne Controls for TeleOp  */
+        /////////////////////////////////////
         /// 
         /// Drive Controls
         drivetrain.setDefaultCommand(
@@ -124,53 +107,73 @@ public class RobotContainer {
                     .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-        
+
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        /// Intake Controls
+        /// Hopper Controls
         driverOne.b().whileTrue(new cmdAuto_HopperExtend(hopper, -1.5));
         driverOne.a().whileTrue(new cmdAuto_HopperExtend(hopper, -8.5));
-        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->1));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
-
-        /// Hopper Controls
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
-        /////////////////////////
-        /*  DriverTwo Controls */
-        /////////////////////////
+        /// Intake Controls
+        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->1));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
+
+        /////////////////////////////////////
+        /*  DriverTwo Controls for TeleOp  */
+        /////////////////////////////////////
+        /// 
         
-        /// Bed Controls
-        //driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
-        //driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
-        //driverTwo.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
-        
-        //driverTwo.a().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
-        //driverTwo.b().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
+        // Auto Shoot
+        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake));
+
+        // Unjam
+        driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
 
         /// Climb Control
-        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->Math.abs(-driverTwo.getLeftY()) > 0.1 ? -driverTwo.getLeftY() : 0));
+        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->Math.abs(driverTwo.getLeftY()) > 0.1 ? -driverTwo.getLeftY() : 0));
         driverTwo.leftBumper().whileTrue(new cmdAuto_ClimbLower(climb));
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
-
-        /// Turret Control
-        //driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-0.15));
-        //driverTwo.rightBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->0.15));
-
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->-driverTwo.getRightY()*0.3));
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.1 ? -driverTwo.getRightY()*0.3 : 0));        
+    }
+    public void ConfigureTestControls(){
+        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
 
-        /// Shooter Control
-        driverTwo.rightTrigger().whileTrue(new cmdShooter_TeleOp(shooter, ()->driverTwo.getRightTriggerAxis()));
+        /// Drive Test Controls
+        drivetrain.setDefaultCommand(
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driverThree.getLeftY() * 0.2) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverThree.getLeftX() * 0.2) // Drive left with negative X (left)
+                    .withRotationalRate(-driverThree.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
+        
+        /// Intake Test Controls
+        driverThree.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.2));
+        driverThree.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.2));
 
-        /// Feeder Control 
-        driverTwo.leftTrigger().whileTrue(new cmdFeeder_TeleOp(feeder, ()->1));
+        /// Hopper Test Controls
+        driverThree.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
+        driverThree.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
-        /// Auto Functions
-        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter));
-        driverTwo.y().whileTrue(new cmdIntake_TeleOp(intake, ()->-.22));
+        /// Bed, Feeder, and Shooter Test Controls
+        driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
+        driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
+        driverThree.a().whileTrue(new cmdFeeder_TeleOp(feeder, ()->0.2));
+        driverThree.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-0.2));
+        driverThree.a().whileTrue(new cmdShooter_TeleOp(shooter, ()->0.2));
+        driverThree.b().whileTrue(new cmdShooter_TeleOp(shooter, ()->-0.2));
+        
+        /// Climb Test Controls
+        driverThree.x().whileTrue(new cmdClimb_TeleOp(climb, ()->-0.2));
+        driverThree.y().whileTrue(new cmdClimb_TeleOp(climb, ()->0.2));
+        
+        /// Hood Test Control
+        driverThree.back().whileTrue(new cmdHood_TeleOp(hood, ()->0.2));
+        driverThree.start().whileTrue(new cmdHood_TeleOp(hood, ()->-0.2));
     }
 }

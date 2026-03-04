@@ -5,43 +5,41 @@ public class Constants {
         public static final int DriverOne = 0;
         public static final int DriverTwo = 1;
     }
+    public static final class Bed{
+        public static final int motorId = 14;
+    }
+    public static final class Climb {
+        public static final int motorId = 15;
+
+        public static final int topLimitSwitchId = 0;
+        public static final int bottomLimitSwitchId = 1;
+    }
+    public static final class Feeder {
+        public static final int motorId = 18;
+    }
+    public static final class Hood{
+        public static final int motorId = 19;
+        public static final int canEncoderId = 20;
+
+        public static final double topPosition = 0;
+        public static final double bottomPosition = 0;
+    }
+    public static final class Hopper{
+        public static final int motorId = 16;
+        public static final double retactedLimit = -1.5;
+        public static final double extendedLimit = -8.5;
+    }
+    public static final class Intake {
+        public static final int topMotorId = 1;
+        public static final int bottomMotorId = 2;
+    }
     public static final class LimeLight {
         public static final String fieldPositionFrontLeft = "limelight-frontleft";
         public static final String fieldPositionBackRight = "limelight-backright";
         public static final String shooterTargetingName = "limelight-shooter";
     }
-    public static final class Climb {
-        public static final int motorId = 15;
-        public static final int canCoderId = 29;
-
-        public static final double bottomPosition = 0;
-        public static final double upPosition = 0;
-        public static final double pullPosition = 0;
-        public static final double topPosition = 0;
-    }
-    public static final class Intake {
-        public static final int bedMotorId = 14;
-        public static final int intakeMotorId = 1;
-        public static final int hopperMotorId = 16;
-
-        public static final double retactedLimit = 0;
-        public static final double extendedLimit = 0;
-    }
     public static final class Shooter {
-        public static final int leftLaunchMotorId = 21;
-        public static final int rightLaunchMotorId = 22;
-        public static final int turretMotorId = 17;
-        public static final int hoodMotorId = 19;
-        public static final int feederMotorId = 18;
-
-        public static final int hoodEncoder = 20;
-        public static final int turretEncoder = 25;
-        public static final int hopperEncoderId = 26;
-
-        public static final double turretClockwiseLimit = 0;
-        public static final double turretCounterClockwiseLimit = 0;
-
-        public static final double hubBottomPosition = 0;
-        public static final double hubTopPosition = 0;
+        public static final int leftMotorId = 21;
+        public static final int rightMotorId = 22;
     }
 }

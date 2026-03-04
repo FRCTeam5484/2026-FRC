@@ -2,14 +2,20 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import static edu.wpi.first.units.Units.*;
 
+import javax.lang.model.util.ElementScanner14;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,6 +25,9 @@ public class subClimb extends SubsystemBase {
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  DigitalInput m_toplimitSwitch = new DigitalInput(Constants.Climb.topLimitSwitchId);
+  DigitalInput m_bottomlimitSwitch = new DigitalInput(Constants.Climb.bottomLimitSwitchId);
+  private final NeutralOut m_brake = new NeutralOut();
 
   public subClimb() {
     configureClimb();
@@ -28,6 +37,9 @@ public class subClimb extends SubsystemBase {
   public void periodic() {
     //SmartDashboard.putNumber("Climb Encoder", m_cancoder.getPosition().getValueAsDouble());
     SmartDashboard.putNumber("Climb Encoder", m_climbMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putBoolean("Climb Top Limit", m_toplimitSwitch.get());
+    SmartDashboard.putBoolean("Climb Bottom Limit", m_bottomlimitSwitch.get());
+    if(m_bottomlimitSwitch.get()) m_climbMotor.setPosition(0);
   }
   private void configureClimb(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -40,7 +52,7 @@ public class subClimb extends SubsystemBase {
     configs.Slot0.kD = 0; // No output for error derivative
     // Peak output of 8 volts
     configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
-
+    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
      // Retry config apply up to 5 times, report if failure
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -56,15 +68,47 @@ public class subClimb extends SubsystemBase {
     m_climbMotor.setNeutralMode(NeutralModeValue.Brake);
   }
   public void TeleOp(double value){
-    m_climbMotor.set(value);
+    if(value > 0 && m_toplimitSwitch.get())
+    {
+      Stop();
+    }
+    else if (value < 0 && m_bottomlimitSwitch.get())
+    {
+      Stop();
+    }
+    else if(value == 0)
+    {
+      Stop();
+    }
+    else
+    {
+      m_climbMotor.set(value);
+    }
   }
   public void Stop(){
     m_climbMotor.stopMotor();
+    m_climbMotor.setControl(m_brake);
   }
   public void RaiseClimb(){
-    m_climbMotor.setControl(m_positionVoltage.withPosition(-85));
+    if(m_toplimitSwitch.get())
+    {
+      Stop();
+    }
+    else
+    {
+      m_climbMotor.set(1);
+      //m_climbMotor.setControl(m_positionVoltage.withPosition(-85));
+    }
   }
   public void LowerClimb(){
-    m_climbMotor.setControl(m_positionVoltage.withPosition(0));
+    if(m_bottomlimitSwitch.get())
+    {
+      Stop();
+    }
+    else
+    {
+      m_climbMotor.set(-1);
+      //m_climbMotor.setControl(m_positionVoltage.withPosition(0));
+    }
   }
 }
