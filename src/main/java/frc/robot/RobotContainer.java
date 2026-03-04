@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +21,9 @@ import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
 import frc.robot.commands.cmdAuto_AutoShoot;
+import frc.robot.commands.cmdAuto_ClimbLower;
+import frc.robot.commands.cmdAuto_ClimbRaise;
+import frc.robot.commands.cmdAuto_HopperExtend;
 import frc.robot.commands.cmdBed_TeleOp;
 import frc.robot.commands.cmdClimb_TeleOp;
 import frc.robot.commands.cmdFeeder_TeleOp;
@@ -67,9 +71,12 @@ public class RobotContainer {
     public RobotContainer() {
         limelight.configureFrontLeft();
         limelight.configureBackRight();
+
+        // Named Commands
+        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter).withTimeout(3));
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        autoChooser = AutoBuilder.buildAutoChooser("Cross Line");
+        autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureDriverOneControls();
@@ -120,9 +127,11 @@ public class RobotContainer {
         
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        
+
         /// Intake Controls
-        //driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->driverOne.getLeftTriggerAxis()));
+        driverOne.b().whileTrue(new cmdAuto_HopperExtend(hopper, -1.5));
+        driverOne.a().whileTrue(new cmdAuto_HopperExtend(hopper, -8.5));
+        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->1));
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
 
         /// Hopper Controls
@@ -134,15 +143,18 @@ public class RobotContainer {
         /////////////////////////
         
         /// Bed Controls
-        driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
-        driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
-        driverTwo.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
+        //driverTwo.a().whileTrue(new cmdBed_TeleOp(bed, ()->1));
+        //driverTwo.b().whileTrue(new cmdBed_TeleOp(bed, ()->-1));
+        //driverTwo.b().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-1));
         
         //driverTwo.a().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
         //driverTwo.b().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
         /// Climb Control
-        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->-driverTwo.getLeftY()));
+        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->Math.abs(-driverTwo.getLeftY()) > 0.1 ? -driverTwo.getLeftY() : 0));
+        driverTwo.leftBumper().whileTrue(new cmdAuto_ClimbLower(climb));
+        driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
+
 
         /// Turret Control
         //driverTwo.leftBumper().whileTrue(new cmdTurret_TeleOp(turret, ()->-0.15));

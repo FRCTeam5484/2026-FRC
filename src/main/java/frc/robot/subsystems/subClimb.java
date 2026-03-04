@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -17,6 +18,7 @@ public class subClimb extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   public subClimb() {
     configureClimb();
@@ -25,6 +27,7 @@ public class subClimb extends SubsystemBase {
   @Override
   public void periodic() {
     //SmartDashboard.putNumber("Climb Encoder", m_cancoder.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Climb Encoder", m_climbMotor.getPosition().getValueAsDouble());
   }
   private void configureClimb(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -32,7 +35,7 @@ public class subClimb extends SubsystemBase {
     // Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor
     configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward
     configs.Slot0.kV = 0.12; // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
-    configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 0.11 V output
+    configs.Slot0.kP = 0.6; // An error of 1 rotation per second results in 0.11 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0; // No output for error derivative
     // Peak output of 8 volts
@@ -44,6 +47,7 @@ public class subClimb extends SubsystemBase {
     for (int i = 0; i < 5; ++i) {
       status = m_climbMotor.getConfigurator().apply(configs);
       m_climbMotor.setNeutralMode(NeutralModeValue.Brake);
+      m_climbMotor.setPosition(0);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -56,5 +60,11 @@ public class subClimb extends SubsystemBase {
   }
   public void Stop(){
     m_climbMotor.stopMotor();
+  }
+  public void RaiseClimb(){
+    m_climbMotor.setControl(m_positionVoltage.withPosition(-85));
+  }
+  public void LowerClimb(){
+    m_climbMotor.setControl(m_positionVoltage.withPosition(0));
   }
 }
