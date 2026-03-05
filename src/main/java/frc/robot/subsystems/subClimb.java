@@ -68,11 +68,11 @@ public class subClimb extends SubsystemBase {
     m_climbMotor.setNeutralMode(NeutralModeValue.Brake);
   }
   public void TeleOp(double value){
-    if(value > 0 && m_toplimitSwitch.get())
+    if(value > 0 && !m_toplimitSwitch.get())
     {
       Stop();
     }
-    else if (value < 0 && m_bottomlimitSwitch.get())
+    else if (value < 0 && !m_bottomlimitSwitch.get())
     {
       Stop();
     }
@@ -90,7 +90,7 @@ public class subClimb extends SubsystemBase {
     m_climbMotor.setControl(m_brake);
   }
   public void RaiseClimb(){
-    if(m_toplimitSwitch.get())
+    if(!m_toplimitSwitch.get())
     {
       Stop();
     }
@@ -101,7 +101,7 @@ public class subClimb extends SubsystemBase {
     }
   }
   public void LowerClimb(){
-    if(m_bottomlimitSwitch.get())
+    if(!m_bottomlimitSwitch.get())
     {
       Stop();
     }

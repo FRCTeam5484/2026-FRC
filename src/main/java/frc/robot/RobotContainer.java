@@ -56,7 +56,7 @@ public class RobotContainer {
     private final CommandXboxController driverOne = new CommandXboxController(0);
     private final CommandXboxController driverTwo = new CommandXboxController(1);
     private final CommandXboxController driverThree = new CommandXboxController(2);
-    public final subLimeLight limelight = new subLimeLight();
+    //public final subLimeLight limelight = new subLimeLight();
     public final subDrive drivetrain = TunerConstants.createDrivetrain();
     public final subBed bed = new subBed();
     public final subClimb climb = new subClimb();
@@ -68,8 +68,8 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        limelight.configureFrontLeft();
-        limelight.configureBackRight();
+        //limelight.configureFrontLeft();
+        //limelight.configureBackRight();
 
         // Named Commands
         NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake).withTimeout(4));
@@ -118,8 +118,8 @@ public class RobotContainer {
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
         /// Intake Controls
-        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->1));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
+        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.2));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.2));
 
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
@@ -138,7 +138,7 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.1 ? -driverTwo.getRightY()*0.3 : 0));        
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.1 ? driverTwo.getRightY()*0.3 : 0));        
     }
     public void ConfigureTestControls(){
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));

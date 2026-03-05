@@ -34,8 +34,8 @@ public class Constants {
         public static final int bottomMotorId = 2;
     }
     public static final class LimeLight {
-        public static final String fieldPositionFrontLeft = "limelight-frontleft";
-        public static final String fieldPositionBackRight = "limelight-backright";
+        public static final String fieldPositionFrontLeft = "limelight-front";
+        public static final String fieldPositionBackRight = "limelight-back";
         public static final String shooterTargetingName = "limelight-shooter";
     }
     public static final class Shooter {

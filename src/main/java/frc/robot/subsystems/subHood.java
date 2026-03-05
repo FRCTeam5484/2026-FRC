@@ -4,12 +4,14 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import static edu.wpi.first.units.Units.*;
@@ -20,7 +22,6 @@ import frc.robot.Constants;
 
 public class subHood extends SubsystemBase {
   public boolean hoodOnTarget = false;
-  public double hoodPosition = 0;
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_hoodMotor = new TalonFX(Constants.Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
@@ -36,10 +37,9 @@ public class subHood extends SubsystemBase {
 
   @Override
   public void periodic() {
-    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(hoodPosition,1.0);
-    hoodPosition = m_cancoder.getPosition().getValueAsDouble();
+    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(EncoderValue(),0.1);
     SmartDashboard.putBoolean("Hood On Target", hoodOnTarget);
-    SmartDashboard.putNumber("Hood Encoder", hoodPosition);
+    SmartDashboard.putNumber("Hood Encoder", EncoderValue());
   }
 
   private void ConfigureHood(){
@@ -49,12 +49,14 @@ public class subHood extends SubsystemBase {
     configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
     // Peak output of 8 V
     configs.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
+    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
     // Retry config apply up to 5 times, report if failure 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_hoodMotor.getConfigurator().apply(configs);
       m_hoodMotor.setNeutralMode(NeutralModeValue.Brake);
+      m_cancoder.setPosition(0);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -67,7 +69,16 @@ public class subHood extends SubsystemBase {
   }
 
   public void TeleOp(double joystickValue) {
-    m_hoodMotor.set(Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue);
+    double value = Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue;
+    if(joystickValue > 0 && EncoderValue() > -0.01){
+      Stop();
+    }
+    else if(joystickValue < 0 && EncoderValue() < -0.4){
+      Stop();
+    }
+    else{
+      m_hoodMotor.set(value);
+    }
   }
 
   public void setPosition(double position)
@@ -83,6 +94,10 @@ public class subHood extends SubsystemBase {
     else{
       m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(desiredRotations));
     }
+  }
+
+  public double EncoderValue(){
+    return m_cancoder.getPosition().getValueAsDouble();
   }
 
   public void Stop() {
