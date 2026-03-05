@@ -9,7 +9,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +41,6 @@ import frc.robot.subsystems.subDrive;
 import frc.robot.subsystems.subFeeder;
 import frc.robot.subsystems.subHopper;
 import frc.robot.subsystems.subIntake;
-import frc.robot.subsystems.subLimeLight;
 import frc.robot.subsystems.subShooter;
 import frc.robot.subsystems.subHood;
 
@@ -67,6 +69,7 @@ public class RobotContainer {
     public final subShooter shooter = new subShooter();
     private final SendableChooser<Command> autoChooser;
 
+
     public RobotContainer() {
         //limelight.configureFrontLeft();
         //limelight.configureBackRight();
@@ -78,13 +81,7 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
-        configureDriverOneControls();
-
         FollowPathCommand.warmupCommand().schedule();
-    }
-
-    private void configureDriverOneControls() {
-        
     }
 
     public Command getAutonomousCommand() {
