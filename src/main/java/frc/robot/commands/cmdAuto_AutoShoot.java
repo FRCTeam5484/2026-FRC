@@ -14,13 +14,15 @@ public class cmdAuto_AutoShoot extends Command {
   subShooter m_shooter;
   subIntake m_intake;
   subHopper m_hopper;
+  Double m_power;
   Timer timer = new Timer();
-  public cmdAuto_AutoShoot(subBed bed, subFeeder feeder, subShooter shooter, subIntake intake, subHopper hopper) {
+  public cmdAuto_AutoShoot(subBed bed, subFeeder feeder, subShooter shooter, subIntake intake, subHopper hopper, Double power) {
     m_bed = bed;
     m_feeder = feeder;
     m_shooter = shooter;
     m_intake = intake;
     m_hopper = hopper;
+    m_power = power;
     addRequirements(m_bed, m_feeder, m_shooter, m_intake, m_hopper);
   }
 
@@ -28,7 +30,7 @@ public class cmdAuto_AutoShoot extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    m_shooter.TeleOp(1);
+    m_shooter.TeleOp(m_power);
   }
 
   @Override

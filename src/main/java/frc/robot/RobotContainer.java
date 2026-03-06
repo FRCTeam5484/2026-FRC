@@ -35,6 +35,7 @@ import frc.robot.commands.cmdHood_TeleOp;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
 import frc.robot.commands.cmdShooter_TeleOp;
+import frc.robot.commands.cmdTest_DriveBack;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
@@ -75,7 +76,7 @@ public class RobotContainer {
         //limelight.configureBackRight();
 
         // Named Commands
-        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper).withTimeout(4));
+        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 0.70).withTimeout(4));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
@@ -107,6 +108,7 @@ public class RobotContainer {
 
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        //driverOne.y().whileTrue(new cmdTest_DriveBack(drivetrain, drive));
 
         /// Hopper Controls
         driverOne.b().whileTrue(new cmdAuto_HopperExtend(hopper, -1.5));
@@ -124,7 +126,8 @@ public class RobotContainer {
         /// 
         
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper));
+        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 1.0));
+        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 0.75));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));

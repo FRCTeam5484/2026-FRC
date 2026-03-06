@@ -55,12 +55,12 @@ public class Robot extends TimedRobot {
         LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontLeft, headingDeg, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate llFrontMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontLeft);
         if (llFrontMeasurement != null && llFrontMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0 && frontLimelightEnabled.getBoolean(true)) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llFrontMeasurement.pose, llFrontMeasurement.timestampSeconds);
+            //m_robotContainer.drivetrain.addVisionMeasurement(llFrontMeasurement.pose, llFrontMeasurement.timestampSeconds);
         }
         LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionBackRight, headingDeg, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate llBackMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionBackRight);
         if (llBackMeasurement != null && llBackMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0 && backLimelightEnabled.getBoolean(true)) {
-            m_robotContainer.drivetrain.addVisionMeasurement(llBackMeasurement.pose, llBackMeasurement.timestampSeconds);
+            //m_robotContainer.drivetrain.addVisionMeasurement(llBackMeasurement.pose, llBackMeasurement.timestampSeconds);
         }
     }
     
