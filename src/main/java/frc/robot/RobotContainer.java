@@ -43,6 +43,7 @@ import frc.robot.subsystems.subDrive;
 import frc.robot.subsystems.subFeeder;
 import frc.robot.subsystems.subHopper;
 import frc.robot.subsystems.subIntake;
+import frc.robot.subsystems.subLimelight;
 import frc.robot.subsystems.subShooter;
 import frc.robot.subsystems.subHood;
 
@@ -70,6 +71,8 @@ public class RobotContainer {
     public final subIntake intake = new subIntake();
     public final subHood hood = new subHood();
     public final subShooter shooter = new subShooter();
+    public final subLimelight frontLimeLight = new subLimelight(Constants.LimeLight.fieldPositionFrontLeft, drivetrain);
+    public final subLimelight backLimeLight = new subLimelight(Constants.LimeLight.fieldPositionBackRight, drivetrain);
     private final SendableChooser<Command> autoChooser;
 
 
