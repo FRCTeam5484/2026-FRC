@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -100,15 +101,15 @@ public class RobotContainer {
         /// Drive Controls
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverOne.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverOne.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(MathUtil.applyDeadband(-driverOne.getLeftY(), 0.05)  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(MathUtil.applyDeadband(-driverOne.getLeftX(), 0.05) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(MathUtil.applyDeadband(-driverOne.getRightX(), 0.05) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        //driverOne.y().whileTrue(new cmdTest_DriveBack(drivetrain, drive));
+        driverOne.y().whileTrue(new cmdTest_DriveBack(drivetrain));
 
         /// Hopper Controls
         driverOne.b().whileTrue(new cmdAuto_HopperExtend(hopper, -1.5));
@@ -133,12 +134,12 @@ public class RobotContainer {
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
 
         /// Climb Control
-        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->Math.abs(driverTwo.getLeftY()) > 0.1 ? -driverTwo.getLeftY() : 0));
+        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()-> MathUtil.applyDeadband(-driverTwo.getLeftY(), 0.05)));
         driverTwo.leftBumper().whileTrue(new cmdAuto_ClimbLower(climb));
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.25 ? driverTwo.getRightY()*0.3 : 0));        
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->MathUtil.applyDeadband(driverTwo.getRightY(), 0.25)*0.3));        
     }
     public void ConfigureTestControls(){
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
@@ -177,7 +178,7 @@ public class RobotContainer {
         driverThree.y().whileTrue(new cmdClimb_TeleOp(climb, ()->0.2));
         
         /// Hood Test Control
-        driverThree.back().whileTrue(new cmdHood_TeleOp(hood, ()->0.2));
-        driverThree.start().whileTrue(new cmdHood_TeleOp(hood, ()->-0.2));
+        driverThree.back().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
+        driverThree.start().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
     }
 }

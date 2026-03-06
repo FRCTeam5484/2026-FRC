@@ -1,18 +1,18 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subDrive;
 
 public class cmdTest_DriveBack extends Command {
   subDrive drivetrain;
-  SwerveRequest.FieldCentric drive;
+  SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   Timer time = new Timer();
-  public cmdTest_DriveBack(subDrive drivetrain, SwerveRequest.FieldCentric drive) {
+  
+  public cmdTest_DriveBack(subDrive drivetrain) {
     this.drivetrain = drivetrain;
-    this.drive = drive;
     addRequirements(this.drivetrain);
   }
 
@@ -24,18 +24,12 @@ public class cmdTest_DriveBack extends Command {
 
   @Override
   public void execute() {
-    drivetrain.applyRequest(() ->
-    drive.withVelocityX(0.2) // Drive forward with negative Y (forward)
-                    .withVelocityY(0) // Drive left with negative X (left)
-                    .withRotationalRate(0));
+    drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0));
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.applyRequest(() ->
-    drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                    .withVelocityY(0) // Drive left with negative X (left)
-                    .withRotationalRate(0));
+    drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(0));
   }
 
   @Override
