@@ -43,8 +43,8 @@ public class Robot extends TimedRobot {
 
     private void UpdateShuffleboard(){
         /// Limelight Widgets
-        frontLimelightEnabled = tabLimelight.add("Front Limelight", true).getEntry();
-        backLimelightEnabled = tabLimelight.add("Back Limelight", true).getEntry();
+        //frontLimelightEnabled = tabLimelight.add("Front Limelight", true).getEntry();
+        //backLimelightEnabled = tabLimelight.add("Back Limelight", true).getEntry();
     }
 
     private void UpdatePose(){

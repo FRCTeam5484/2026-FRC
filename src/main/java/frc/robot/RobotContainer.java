@@ -75,7 +75,7 @@ public class RobotContainer {
         //limelight.configureBackRight();
 
         // Named Commands
-        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake).withTimeout(4));
+        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper).withTimeout(4));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
@@ -124,7 +124,7 @@ public class RobotContainer {
         /// 
         
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake));
+        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
@@ -135,7 +135,7 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.1 ? driverTwo.getRightY()*0.3 : 0));        
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->Math.abs(driverTwo.getRightY()) > 0.25 ? driverTwo.getRightY()*0.3 : 0));        
     }
     public void ConfigureTestControls(){
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));

@@ -19,7 +19,7 @@ public class cmdHood_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_hood.TeleOp(m_speed.getAsDouble()*.5);
+    m_hood.TeleOp(m_speed.getAsDouble());
   }
 
   @Override

@@ -39,8 +39,8 @@ public class subHopper extends SubsystemBase {
     configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward
     configs.Slot0.kV = 0.12; // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
     configs.Slot0.kP = 1; // An error of 1 rotation per second results in 0.11 V output
-    configs.Slot0.kI = 0.5; // No output for integrated error
-    configs.Slot0.kD = 0.1; // No output for error derivative
+    configs.Slot0.kI = 0; // No output for integrated error
+    configs.Slot0.kD = 0.05; // No output for error derivative
     // Peak output of 8 volts
     configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
 
