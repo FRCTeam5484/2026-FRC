@@ -52,8 +52,9 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 5% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+            // At some point, we need to change this to DriveRequestType.Velocity for closed-loop control but need to TUNE the PID
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -73,14 +74,11 @@ public class RobotContainer {
 
 
     public RobotContainer() {
-        //limelight.configureFrontLeft();
-        //limelight.configureBackRight();
-
         // Named Commands
         NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 0.70).withTimeout(4));
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        autoChooser = AutoBuilder.buildAutoChooser("LeftHub-Shoot");
+        autoChooser = AutoBuilder.buildAutoChooser("ShootNoMove");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         FollowPathCommand.warmupCommand().schedule();
@@ -101,9 +99,9 @@ public class RobotContainer {
         /// Drive Controls
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(MathUtil.applyDeadband(-driverOne.getLeftY(), 0.05)  * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(MathUtil.applyDeadband(-driverOne.getLeftX(), 0.05) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(MathUtil.applyDeadband(-driverOne.getRightX(), 0.05) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driverOne.getLeftY()  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverOne.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverOne.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
