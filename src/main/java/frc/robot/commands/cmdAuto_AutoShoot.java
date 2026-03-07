@@ -39,13 +39,13 @@ public class cmdAuto_AutoShoot extends Command {
       m_intake.TeleOp(.5);
       m_bed.TeleOp(1);
       m_feeder.TeleOp(1);
-      if(timer.get() > 1.5){
+      if(timer.get() > 2.5){
         m_hopper.SetHopperPosition(-1.5);
       }
-      else if ( timer.get() > 2){
+      else if ( timer.get() > 3){
         m_hopper.SetHopperPosition(-4);
       }
-      else if ( timer.get() > 2.5){
+      else if ( timer.get() > 3.5){
         m_hopper.SetHopperPosition(-1.5);
       }
     }

@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DriveBackALittle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Auto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DriveToBar"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
