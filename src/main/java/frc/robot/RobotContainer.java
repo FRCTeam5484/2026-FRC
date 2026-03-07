@@ -78,7 +78,9 @@ public class RobotContainer {
 
     public RobotContainer() {
         // Named Commands
-        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 0.70).withTimeout(4));
+        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.70).withTimeout(4));
+        NamedCommands.registerCommand("Climb Raise Auto", new cmdAuto_ClimbRaise(climb).withTimeout(2));
+        NamedCommands.registerCommand("Climb Lower Auto", new cmdAuto_ClimbLower(climb).withTimeout(3));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("ShootNoMove");
@@ -128,8 +130,8 @@ public class RobotContainer {
         /// 
         
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 1.0));
-        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, hopper, 0.75));
+        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
+        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));

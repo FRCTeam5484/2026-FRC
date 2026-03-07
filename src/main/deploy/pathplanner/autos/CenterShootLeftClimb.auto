@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "DriveToBar"
+                  "pathName": "DriveToBarLeft"
                 }
               },
               {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToBar"
+            "pathName": "ToBarLeft"
           }
         },
         {
