@@ -30,6 +30,7 @@ public class Constants {
         public static final double extendedLimit = -8.5;
     }
     public static final class Intake {
+        public static final int x44MotorId = 23;
         public static final int topMotorId = 1;
         public static final int bottomMotorId = 2;
     }
