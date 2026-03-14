@@ -121,8 +121,8 @@ public class RobotContainer {
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
         /// Intake Controls
-        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.6));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.6));
+        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
+        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
 
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */

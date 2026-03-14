@@ -35,7 +35,7 @@ public class cmdAuto_AutoShoot extends Command {
 
   @Override
   public void execute() {
-    if(timer.get() > 1){
+    if(timer.get() > 2){
       m_intake.TeleOp(.5);
       m_bed.TeleOp(1);
       m_feeder.TeleOp(1);
