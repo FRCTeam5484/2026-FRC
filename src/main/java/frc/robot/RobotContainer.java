@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
+import frc.robot.commands.cmdAuto_AutoAlign;
 import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
@@ -165,7 +166,7 @@ public class RobotContainer {
         driverThree.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
 
         /// Bed Test Controls
-        driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
+        //driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
         driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
         
         /// Feeder Test Controls
@@ -183,5 +184,7 @@ public class RobotContainer {
         /// Hood Test Control
         driverThree.back().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
         driverThree.start().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
+
+        driverThree.a().whileTrue(new cmdAuto_AutoAlign(drivetrain, hood, shooter));
     }
 }
