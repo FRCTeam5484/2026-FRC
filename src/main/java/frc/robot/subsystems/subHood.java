@@ -26,13 +26,9 @@ public class subHood extends SubsystemBase {
   private final TalonFX m_hoodMotor = new TalonFX(Constants.Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
-  private final CANcoder m_cancoder = new CANcoder(Constants.Hood.canEncoderId, canbus);
   
   public subHood() {
     ConfigureHood();
-    var toApply = new CANcoderConfiguration();
-    m_cancoder.getConfigurator().apply(toApply);
-    BaseStatusSignal.setUpdateFrequencyForAll(100, m_cancoder.getPosition(), m_cancoder.getVelocity());
   }
 
   @Override
@@ -56,7 +52,6 @@ public class subHood extends SubsystemBase {
     for (int i = 0; i < 5; ++i) {
       status = m_hoodMotor.getConfigurator().apply(configs);
       m_hoodMotor.setNeutralMode(NeutralModeValue.Brake);
-      m_cancoder.setPosition(0);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {

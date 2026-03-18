@@ -138,11 +138,11 @@ public class RobotContainer {
         driverTwo.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
-        driverTwo.back().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
-        driverTwo.back().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
+        driverTwo.start().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
+        driverTwo.start().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
 
         // Reset Hood Encoder
-        driverTwo.start().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
+        driverTwo.back().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
