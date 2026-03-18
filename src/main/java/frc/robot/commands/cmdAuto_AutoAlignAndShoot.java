@@ -58,7 +58,7 @@ public class cmdAuto_AutoAlignAndShoot extends Command {
       m_drive.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(turnCommand())).execute();
       m_hood.setPosition(hoodCommand());
       m_shooter.TeleOp(shooterCommand());
-      System.out.println("Turn Command: " + String.valueOf(turnCommand()) + " Hood Command: " + String.valueOf(hoodCommand()) + " Shooter Command: " + shooterCommand());
+      //System.out.println("Turn Command: " + String.valueOf(turnCommand()) + " Hood Command: " + String.valueOf(hoodCommand()) + " Shooter Command: " + shooterCommand());
       if(timer.get() > 1.5){
         m_intake.TeleOp(.5);
         m_feeder.TeleOp(1);

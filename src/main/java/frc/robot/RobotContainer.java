@@ -31,6 +31,7 @@ import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
 import frc.robot.commands.cmdAuto_HopperExtend;
+import frc.robot.commands.cmdAuto_RelayToAlliance;
 import frc.robot.commands.cmdAuto_Unjam;
 import frc.robot.commands.cmdBed_TeleOp;
 import frc.robot.commands.cmdClimb_TeleOp;
@@ -137,6 +138,8 @@ public class RobotContainer {
         driverTwo.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
+        driverTwo.back().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
+        driverTwo.back().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
 
         // Reset Hood Encoder
         driverTwo.start().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
