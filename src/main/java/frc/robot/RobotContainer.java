@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -132,11 +133,13 @@ public class RobotContainer {
         /// 
         
         // Auto Shoot
-        //driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
-        //driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
         driverTwo.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake));
         driverTwo.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
-        driverTwo.x().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
+        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
+        driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
+
+        // Reset Hood Encoder
+        driverTwo.start().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
@@ -147,7 +150,7 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->MathUtil.applyDeadband(-driverTwo.getRightY(), 0.05)*0.1));  
+        hood.setDefaultCommand(Commands.run(()->hood.TeleOpNoSafe(MathUtil.applyDeadband(-driverTwo.getRightY(), 0.1)*0.1), hood));  
               
     }
     public void ConfigureTestControls(){
