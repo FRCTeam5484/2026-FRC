@@ -37,19 +37,19 @@ public class subHood extends SubsystemBase {
 
   @Override
   public void periodic() {
-    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(EncoderValue(),0.1);
+    hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(m_hoodMotor.getPosition().getValueAsDouble(),0.1);
     SmartDashboard.putBoolean("Hood On Target", hoodOnTarget);
-    SmartDashboard.putNumber("Hood Encoder", EncoderValue());
+    SmartDashboard.putNumber("Hood Encoder", m_hoodMotor.getPosition().getValueAsDouble());
   }
 
   private void ConfigureHood(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
-    configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+    configs.Slot0.kP = 2.5; // An error of 1 rotation results in 2.4 V output
     configs.Slot0.kI = 0; // No output for integrated error
-    configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    configs.Slot0.kD = 0; // A velocity of 1 rps results in 0.1 V output
     // Peak output of 8 V
     configs.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
-    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
     // Retry config apply up to 5 times, report if failure 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -69,20 +69,25 @@ public class subHood extends SubsystemBase {
   }
 
   public void TeleOp(double joystickValue) {
-    double value = Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue;
-    if(joystickValue > 0 && EncoderValue() > -0.01){
+    if(joystickValue < 0 && m_hoodMotor.getPosition().getValueAsDouble() <= 0){
       Stop();
     }
-    else if(joystickValue < 0 && EncoderValue() < -0.4){
+    else if(joystickValue > 0 && m_hoodMotor.getPosition().getValueAsDouble() >= 0.6){
       Stop();
     }
     else{
-      m_hoodMotor.set(value);
+      m_hoodMotor.set(joystickValue);
     }
+  }
+  public void TeleOpNoSafe(double joystickValue) {
+    double value = Math.abs(joystickValue) <= 0.02 ? 0 : joystickValue;
+    m_hoodMotor.set(value);
   }
 
   public void setPosition(double position)
   {
+    m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(position));
+    /* 
     double desiredRotations = position * 10; // Go for plus/minus 10 rotations
     if (Math.abs(desiredRotations) <= 0.1) { // Joystick deadzone
       desiredRotations = 0;
@@ -94,10 +99,11 @@ public class subHood extends SubsystemBase {
     else{
       m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(desiredRotations));
     }
+      */
   }
 
-  public double EncoderValue(){
-    return m_cancoder.getPosition().getValueAsDouble();
+  public void ResetEncoder(){
+    m_hoodMotor.setPosition(0);
   }
 
   public void Stop() {

@@ -18,13 +18,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
-import frc.robot.commands.cmdAuto_AutoAlign;
+import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
 import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
@@ -50,7 +51,7 @@ import frc.robot.subsystems.subHood;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(2).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -131,8 +132,11 @@ public class RobotContainer {
         /// 
         
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
-        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
+        //driverTwo.a().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
+        //driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
+        driverTwo.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake));
+        driverTwo.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
+        driverTwo.x().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
 
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
@@ -143,16 +147,18 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->MathUtil.applyDeadband(driverTwo.getRightY(), 0.25)*0.3));        
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->MathUtil.applyDeadband(-driverTwo.getRightY(), 0.05)*0.1));  
+              
     }
     public void ConfigureTestControls(){
         RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
 
         /// Drive Test Controls
+        /// 
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverThree.getLeftY() * 0.2) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverThree.getLeftX() * 0.2) // Drive left with negative X (left)
+                drive.withVelocityX(-driverThree.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverThree.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driverThree.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -167,7 +173,7 @@ public class RobotContainer {
 
         /// Bed Test Controls
         //driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
-        driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
+        //driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
         
         /// Feeder Test Controls
         driverThree.povUp().whileTrue(new cmdFeeder_TeleOp(feeder, ()->0.2));
@@ -182,9 +188,13 @@ public class RobotContainer {
         driverThree.y().whileTrue(new cmdClimb_TeleOp(climb, ()->0.2));
         
         /// Hood Test Control
-        driverThree.back().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
-        driverThree.start().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
+        driverThree.back().whileTrue(new InstantCommand(() -> hood.TeleOpNoSafe(-0.1)));
+        driverThree.back().whileFalse(new InstantCommand(() -> hood.Stop()));
+        driverThree.start().whileTrue(new InstantCommand(() -> hood.TeleOpNoSafe(0.1)));
+        driverThree.start().whileFalse(new InstantCommand(() -> hood.Stop()));
 
-        driverThree.a().whileTrue(new cmdAuto_AutoAlign(drivetrain, hood, shooter));
+        //driverThree.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter));
+        //driverThree.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
+        //driverThree.b().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
     }
 }
