@@ -27,6 +27,7 @@ import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
 import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
+import frc.robot.commands.cmdAuto_AutoAlignShootMove;
 import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
@@ -140,6 +141,7 @@ public class RobotContainer {
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
         driverTwo.start().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
         driverTwo.start().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
+        driverTwo.povUp().whileTrue(new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->-driverOne.getLeftY()));
 
         // Reset Hood Encoder
         driverTwo.back().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
