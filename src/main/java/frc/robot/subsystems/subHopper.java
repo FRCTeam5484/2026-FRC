@@ -21,6 +21,8 @@ public class subHopper extends SubsystemBase {
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
+  double ClosedPosition = -1.5;
+  double OpenPosition = -8.5;
   
   public subHopper() {
     configureHopper();
@@ -64,7 +66,16 @@ public class subHopper extends SubsystemBase {
     m_hopperMotor.stopMotor();
     m_hopperMotor.setControl(m_brake);
   }
+  public void ExtendHopper(){
+    SetHopperPosition(OpenPosition);
+  }
+  public void RetractHopper(){
+    SetHopperPosition(ClosedPosition);
+  }
   public void SetHopperPosition(double position){
     m_hopperMotor.setControl(m_positionVoltage.withPosition(position));
+  }
+  public void ResetEncoder(){
+    m_hopperMotor.setPosition(0);
   }
 }

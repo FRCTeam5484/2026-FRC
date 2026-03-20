@@ -60,9 +60,9 @@ public class cmdAuto_AutoAlignShootMove extends Command {
     {
       timer.start();
       m_drive.applyRequest(() -> drive.withVelocityX(m_moveCommand.getAsDouble()).withVelocityY(0).withRotationalRate(turnCommand())).execute();
-      m_hood.setPosition(hoodCommand());
-      m_shooter.TeleOp(shooterCommand());
-      //System.out.println("Turn Command: " + String.valueOf(turnCommand()) + " Hood Command: " + String.valueOf(hoodCommand()) + " Shooter Command: " + shooterCommand());
+      m_hood.setPosition();
+      //m_shooter.setShooterPower();
+      m_shooter.setShooterRPM();
       if(timer.get() > 1.5){
         m_intake.TeleOp(.5);
         m_feeder.TeleOp(1);
@@ -100,28 +100,7 @@ public class cmdAuto_AutoAlignShootMove extends Command {
     targetingAngularVelocity *= -1.0;
     return targetingAngularVelocity;
   }
-  private double hoodCommand()
-  {    
-    double MIN_INPUT = -11.0;
-    double MAX_INPUT = 12.0;
-    double MIN_OUTPUT = 0.6;
-    double MAX_OUTPUT = 0.0;
-    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(MIN_INPUT, Math.min(MAX_INPUT, distance));
-    double normalized = (distance - MIN_INPUT) / (MAX_INPUT - MIN_INPUT);
-    return MIN_OUTPUT + normalized * (MAX_OUTPUT - MIN_OUTPUT);
-  }
-  private double shooterCommand()
-  {    
-    double MIN_INPUT = -11.0;
-    double MAX_INPUT = 12.0;
-    double MIN_OUTPUT = 1;
-    double MAX_OUTPUT = 0.6;
-    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(MIN_INPUT, Math.min(MAX_INPUT, distance));
-    double normalized = (distance - MIN_INPUT) / (MAX_INPUT - MIN_INPUT);
-    return MIN_OUTPUT + normalized * (MAX_OUTPUT - MIN_OUTPUT);
-  }
+
   private boolean hasTarget()
   {
     return LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName);

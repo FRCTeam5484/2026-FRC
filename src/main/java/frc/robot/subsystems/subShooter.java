@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.classes.LimelightHelpers;
+
 import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
@@ -15,6 +17,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class subShooter extends SubsystemBase {
   public String gameData;
@@ -26,6 +29,8 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
+  double MIN_DISTANCE = -11;
+  double MAX_DISTANCE = 12;
   
   public subShooter() {
     ConfigureShooter();
@@ -34,7 +39,8 @@ public class subShooter extends SubsystemBase {
   @Override
   public void periodic() {
     isShooterAtSpeed();
-    checkHubStatus();
+    SmartDashboard.putNumber("Shooter Power Command", CommandPower());
+    SmartDashboard.putNumber("Shooter RPM Command", CommandRPM());
   }
 
   private void ConfigureShooter(){
@@ -62,47 +68,43 @@ public class subShooter extends SubsystemBase {
   }
   
   
-  public void TeleOp(double joystickValue) {
-    m_leftLaunchMotor.set(Math.abs(joystickValue) <= 0.1 ? 0 : joystickValue);
+  public void TeleOp(double speed) {
+    m_leftLaunchMotor.set(Math.abs(speed) <= 0.1 ? 0 : speed);
   }
   
-  public void setShooterRPM(double rps) {
-    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(rps * 90));
+  public void setShooterRPM() {
+    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(CommandRPM() / 60));
+  }
+
+  public void setShooterPower() {
+    m_leftLaunchMotor.set(CommandPower());
   }
   
   public void isShooterAtSpeed() {
     shooterAtSpeed = m_leftLaunchMotor.getClosedLoopError().isNear(shooterRPM, 1.0);
   }
-  
-  public void checkHubStatus() {
-    if(DriverStation.isFMSAttached() && DriverStation.isEnabled()){
-      gameData = DriverStation.getGameSpecificMessage();
-      if(gameData.length() > 0)
-      {
-        switch (gameData.charAt(0))
-        {
-          case 'B' :
-            activeHub = "Blue";
-            myHubActive = DriverStation.getAlliance().get().equals(Alliance.Blue) ? true : false;
-            break;
-          case 'R' :
-            activeHub = "Red";
-            myHubActive = DriverStation.getAlliance().get().equals(Alliance.Red) ? true : false;
-            break;
-          default :
-            activeHub = "Look at field";
-            myHubActive = false;
-            break;
-        }
-      }
-      else{
-        activeHub = "NA";
-        myHubActive = false;
-      }
-    }
-  }
 
   public void Stop() {
     m_leftLaunchMotor.stopMotor();
+  }
+
+  public double CommandPower()
+  {    
+    double MaxPower = 1;
+    double MinPower = 0.6;
+    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
+    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
+    return MaxPower + normalized * (MinPower - MaxPower);
+  }
+
+  public double CommandRPM()
+  {    
+    double MaxRPM = 6000;
+    double MinRPM = 3000;
+    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
+    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
+    return MaxRPM + normalized * (MinRPM - MaxRPM);
   }
 }

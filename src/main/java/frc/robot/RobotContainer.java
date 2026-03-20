@@ -27,11 +27,11 @@ import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
 import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
+//import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
 import frc.robot.commands.cmdAuto_AutoAlignShootMove;
 import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
-import frc.robot.commands.cmdAuto_HopperExtend;
 import frc.robot.commands.cmdAuto_RelayToAlliance;
 import frc.robot.commands.cmdAuto_Unjam;
 import frc.robot.commands.cmdBed_TeleOp;
@@ -41,7 +41,6 @@ import frc.robot.commands.cmdHood_TeleOp;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
 import frc.robot.commands.cmdShooter_TeleOp;
-import frc.robot.commands.cmdTest_DriveBack;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
@@ -86,6 +85,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.70).withTimeout(4));
         NamedCommands.registerCommand("Climb Raise Auto", new cmdAuto_ClimbRaise(climb).withTimeout(2));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdAuto_ClimbLower(climb).withTimeout(3));
+        NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(4));
+        NamedCommands.registerCommand("Auto Align and Shoot", new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake).withTimeout(4));
+        NamedCommands.registerCommand("Extend Hopper", new InstantCommand(()->hopper.ExtendHopper(), hopper));
+        NamedCommands.registerCommand("Retract Hopper", new InstantCommand(()->hopper.RetractHopper(), hopper));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("ShootNoMove");
@@ -105,7 +108,7 @@ public class RobotContainer {
         /////////////////////////////////////
         /*  DriverOne Controls for TeleOp  */
         /////////////////////////////////////
-        /// 
+        
         /// Drive Controls
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
@@ -117,14 +120,16 @@ public class RobotContainer {
 
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        driverOne.y().whileTrue(new cmdTest_DriveBack(drivetrain));
 
         /// Hopper Controls
-        driverOne.b().whileTrue(new cmdAuto_HopperExtend(hopper, -1.5));
-        driverOne.a().whileTrue(new cmdAuto_HopperExtend(hopper, -8.5));
+        driverOne.a().whileTrue(new RunCommand(()->hopper.ExtendHopper(), hopper));
+        driverOne.a().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+        driverOne.b().whileTrue(new RunCommand(()->hopper.RetractHopper(), hopper));
+        driverOne.b().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+        driverOne.y().onTrue(new InstantCommand(()-> hopper.ResetEncoder(), hopper));
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
-
+        
         /// Intake Controls
         driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
@@ -132,16 +137,14 @@ public class RobotContainer {
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
         /////////////////////////////////////
-        /// 
-        
+                
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake));
-        driverTwo.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
+        driverTwo.a().whileTrue(new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->-driverOne.getLeftY()));
+        driverTwo.a().onFalse(new InstantCommand(() -> hood.putHoodDown()));
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
         driverTwo.start().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
-        driverTwo.start().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
-        driverTwo.povUp().whileTrue(new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->-driverOne.getLeftY()));
+        driverTwo.start().onFalse(new InstantCommand(() -> hood.putHoodDown()));
 
         // Reset Hood Encoder
         driverTwo.back().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
@@ -157,52 +160,5 @@ public class RobotContainer {
         /// Hood Control
         hood.setDefaultCommand(Commands.run(()->hood.TeleOpNoSafe(MathUtil.applyDeadband(-driverTwo.getRightY(), 0.1)*0.1), hood));  
               
-    }
-    public void ConfigureTestControls(){
-        RobotModeTriggers.disabled().whileTrue(drivetrain.applyRequest(() -> new SwerveRequest.Idle()).ignoringDisable(true));
-
-        /// Drive Test Controls
-        /// 
-        drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverThree.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverThree.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverThree.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
-        
-        /// Intake Test Controls
-        driverThree.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.2));
-        driverThree.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.2));
-
-        /// Hopper Test Controls
-        driverThree.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
-        driverThree.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
-
-        /// Bed Test Controls
-        //driverThree.a().whileTrue(new cmdBed_TeleOp(bed, ()->0.2));
-        //driverThree.b().whileTrue(new cmdBed_TeleOp(bed, ()->-0.2));
-        
-        /// Feeder Test Controls
-        driverThree.povUp().whileTrue(new cmdFeeder_TeleOp(feeder, ()->0.2));
-        driverThree.povDown().whileTrue(new cmdFeeder_TeleOp(feeder, ()->-0.2));
-
-        /// Shooter Test Controls
-        driverThree.povLeft().whileTrue(new cmdShooter_TeleOp(shooter, ()->0.2));
-        driverThree.povRight().whileTrue(new cmdShooter_TeleOp(shooter, ()->-0.2));
-        
-        /// Climb Test Controls
-        driverThree.x().whileTrue(new cmdClimb_TeleOp(climb, ()->-0.2));
-        driverThree.y().whileTrue(new cmdClimb_TeleOp(climb, ()->0.2));
-        
-        /// Hood Test Control
-        driverThree.back().whileTrue(new InstantCommand(() -> hood.TeleOpNoSafe(-0.1)));
-        driverThree.back().whileFalse(new InstantCommand(() -> hood.Stop()));
-        driverThree.start().whileTrue(new InstantCommand(() -> hood.TeleOpNoSafe(0.1)));
-        driverThree.start().whileFalse(new InstantCommand(() -> hood.Stop()));
-
-        //driverThree.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter));
-        //driverThree.a().onFalse(new InstantCommand(() -> hood.setPosition(-0.08)));
-        //driverThree.b().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
     }
 }

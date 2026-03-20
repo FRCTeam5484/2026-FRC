@@ -19,6 +19,7 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.classes.LimelightHelpers;
 
 public class subHood extends SubsystemBase {
   public boolean hoodOnTarget = false;
@@ -26,6 +27,8 @@ public class subHood extends SubsystemBase {
   private final TalonFX m_hoodMotor = new TalonFX(Constants.Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
+  double MIN_DISTANCE = -11;
+  double MAX_DISTANCE = 12;
   
   public subHood() {
     ConfigureHood();
@@ -36,6 +39,7 @@ public class subHood extends SubsystemBase {
     hoodOnTarget = m_hoodMotor.getClosedLoopError().isNear(m_hoodMotor.getPosition().getValueAsDouble(),0.1);
     SmartDashboard.putBoolean("Hood On Target", hoodOnTarget);
     SmartDashboard.putNumber("Hood Encoder", m_hoodMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Hood Command", hoodPositionCommand());
   }
 
   private void ConfigureHood(){
@@ -79,22 +83,13 @@ public class subHood extends SubsystemBase {
     m_hoodMotor.set(value);
   }
 
+  public void setPosition()
+  {
+    m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(hoodPositionCommand()));
+  }
   public void setPosition(double position)
   {
     m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(position));
-    /* 
-    double desiredRotations = position * 10; // Go for plus/minus 10 rotations
-    if (Math.abs(desiredRotations) <= 0.1) { // Joystick deadzone
-      desiredRotations = 0;
-    }
-
-    if(desiredRotations == 0){
-      m_hoodMotor.setControl(m_brake);
-    }
-    else{
-      m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(desiredRotations));
-    }
-      */
   }
 
   public void ResetEncoder(){
@@ -104,5 +99,19 @@ public class subHood extends SubsystemBase {
   public void Stop() {
     m_hoodMotor.stopMotor();
     m_hoodMotor.setControl(m_brake);
+  }
+
+  public void putHoodDown(){
+    setPosition(-0.08);
+  }
+
+  public double hoodPositionCommand()
+  {    
+    double MaxEncoderValue = 0.6;
+    double MinEncoderValue = 0.0;
+    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
+    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
+    return MaxEncoderValue + normalized * (MinEncoderValue - MaxEncoderValue);
   }
 }
