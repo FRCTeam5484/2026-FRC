@@ -5,7 +5,6 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -19,7 +18,6 @@ public class subClimb extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
-  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
   DigitalInput m_toplimitSwitch = new DigitalInput(Constants.Climb.topLimitSwitchId);
   DigitalInput m_bottomlimitSwitch = new DigitalInput(Constants.Climb.bottomLimitSwitchId);
   private final NeutralOut m_brake = new NeutralOut();

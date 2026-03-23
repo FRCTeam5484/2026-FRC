@@ -1,35 +1,29 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Hood;
+import frc.robot.Constants.LimeLight;
 import frc.robot.classes.LimelightHelpers;
 
 public class subHood extends SubsystemBase {
   public boolean hoodOnTarget = false;
   private final CANBus canbus = new CANBus("SubSystems");
-  private final TalonFX m_hoodMotor = new TalonFX(Constants.Hood.motorId, canbus); 
+  private final TalonFX m_hoodMotor = new TalonFX(Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
-  double MIN_DISTANCE = -11;
-  double MAX_DISTANCE = 12;
-  
+    
   public subHood() {
     ConfigureHood();
   }
@@ -102,16 +96,14 @@ public class subHood extends SubsystemBase {
   }
 
   public void putHoodDown(){
-    setPosition(-0.08);
+    setPosition(Constants.Hood.bottomPosition);
   }
 
   public double hoodPositionCommand()
-  {    
-    double MaxEncoderValue = 0.6;
-    double MinEncoderValue = 0.0;
-    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
-    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
-    return MaxEncoderValue + normalized * (MinEncoderValue - MaxEncoderValue);
+  {
+    double distance = LimelightHelpers.getTY(LimeLight.shooterTargetingName);
+    distance = Math.max(Constants.Hood.bottomPosition, Math.min(Constants.Hood.topPosition, distance));
+    double normalized = (distance - Constants.Hood.bottomPosition) / (Constants.Hood.topPosition - Constants.Hood.bottomPosition);
+    return Constants.Hood.topPosition + normalized * (Constants.Hood.bottomPosition - Constants.Hood.topPosition);
   }
 }

@@ -1,9 +1,9 @@
 package frc.robot;
 
 public class Constants {
-    public static final class Operators {
-        public static final int DriverOne = 0;
-        public static final int DriverTwo = 1;
+    public static final class TargetingDistance{
+        public static final double minDistance = -11;
+        public static final double maxDistance = 12;
     }
     public static final class Bed{
         public static final int motorId = 14;
@@ -11,8 +11,8 @@ public class Constants {
     public static final class Climb {
         public static final int motorId = 15;
 
-        public static final int topLimitSwitchId = 0;
-        public static final int bottomLimitSwitchId = 1;
+        public static final int topLimitSwitchId = 1;
+        public static final int bottomLimitSwitchId = 0;
     }
     public static final class Feeder {
         public static final int motorId = 18;
@@ -21,8 +21,8 @@ public class Constants {
         public static final int motorId = 19;
         public static final int canEncoderId = 20;
 
-        public static final double topPosition = 0;
-        public static final double bottomPosition = 0;
+        public static final double topPosition = 0.6;
+        public static final double bottomPosition = -0.08;
     }
     public static final class Hopper{
         public static final int motorId = 16;

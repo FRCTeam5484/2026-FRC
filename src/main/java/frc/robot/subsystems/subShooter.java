@@ -3,20 +3,15 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.classes.LimelightHelpers;
-
 import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class subShooter extends SubsystemBase {
@@ -29,8 +24,7 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
-  double MIN_DISTANCE = -11;
-  double MAX_DISTANCE = 12;
+  
   
   public subShooter() {
     ConfigureShooter();
@@ -41,6 +35,7 @@ public class subShooter extends SubsystemBase {
     isShooterAtSpeed();
     SmartDashboard.putNumber("Shooter Power Command", CommandPower());
     SmartDashboard.putNumber("Shooter RPM Command", CommandRPM());
+    SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
   }
 
   private void ConfigureShooter(){
@@ -93,8 +88,8 @@ public class subShooter extends SubsystemBase {
     double MaxPower = 1;
     double MinPower = 0.6;
     double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
-    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
+    distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
+    double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
     return MaxPower + normalized * (MinPower - MaxPower);
   }
 
@@ -103,8 +98,8 @@ public class subShooter extends SubsystemBase {
     double MaxRPM = 6000;
     double MinRPM = 3000;
     double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
-    double normalized = (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE);
+    distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
+    double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
     return MaxRPM + normalized * (MinRPM - MaxRPM);
   }
 }

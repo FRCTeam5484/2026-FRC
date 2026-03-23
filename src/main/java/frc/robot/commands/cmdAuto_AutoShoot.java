@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subFeeder;
-import frc.robot.subsystems.subHopper;
 import frc.robot.subsystems.subIntake;
 import frc.robot.subsystems.subShooter;
 
