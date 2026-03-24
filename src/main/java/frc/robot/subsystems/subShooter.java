@@ -38,6 +38,8 @@ public class subShooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Power Command", CommandPower());
     SmartDashboard.putNumber("Shooter RPM Command", CommandRPM());
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
+    SmartDashboard.putBoolean("Shooter Has Target", LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName));
   }
 
   private void ConfigureShooter(){
@@ -87,22 +89,36 @@ public class subShooter extends SubsystemBase {
   }
 
   public double CommandPower()
-  {    
-    double MaxPower = 1;
-    double MinPower = 0.6;
-    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
-    double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
-    return MaxPower + normalized * (MinPower - MaxPower);
+  {  
+    if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
+    {  
+      double MaxPower = 1;
+      double MinPower = 0.6;
+      double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+      distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
+      double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
+      return MaxPower + normalized * (MinPower - MaxPower);
+    }
+    else
+    {
+      return 0;
+    }
   }
 
   public double CommandRPM()
   {    
-    double MaxRPM = 6000;
-    double MinRPM = 3000;
-    double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-    distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
-    double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
-    return MaxRPM + normalized * (MinRPM - MaxRPM);
+    if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
+    {
+      double MaxRPM = 6000;
+      double MinRPM = 3000;
+      double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+      distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
+      double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
+      return MaxRPM + normalized * (MinRPM - MaxRPM);
+    }
+    else
+    {
+      return 0;
+    }
   }
 }

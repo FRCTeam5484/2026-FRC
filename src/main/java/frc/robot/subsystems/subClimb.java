@@ -30,8 +30,8 @@ public class subClimb extends SubsystemBase {
   public void periodic() {
     //SmartDashboard.putNumber("Climb Encoder", m_cancoder.getPosition().getValueAsDouble());
     SmartDashboard.putNumber("Climb Encoder", m_climbMotor.getPosition().getValueAsDouble());
-    SmartDashboard.putBoolean("Climb Top Limit", m_toplimitSwitch.get());
-    SmartDashboard.putBoolean("Climb Bottom Limit", m_bottomlimitSwitch.get());
+    SmartDashboard.putBoolean("Climb Top Limit", !m_toplimitSwitch.get());
+    SmartDashboard.putBoolean("Climb Bottom Limit", !m_bottomlimitSwitch.get());
     if(m_bottomlimitSwitch.get()) m_climbMotor.setPosition(0);
   }
   private void configureClimb(){

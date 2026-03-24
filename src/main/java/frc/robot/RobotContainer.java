@@ -26,7 +26,6 @@ import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
 import frc.robot.commands.cmdAuto_RelayToAlliance;
 import frc.robot.commands.cmdAuto_Unjam;
-import frc.robot.commands.cmdClimb_TeleOp;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
 import frc.robot.subsystems.subBed;
