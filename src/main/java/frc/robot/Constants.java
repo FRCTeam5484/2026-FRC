@@ -11,8 +11,8 @@ public class Constants {
     public static final class Climb {
         public static final int motorId = 15;
 
-        public static final int topLimitSwitchId = 1;
-        public static final int bottomLimitSwitchId = 0;
+        public static final int topLimitSwitchId = 0;
+        public static final int bottomLimitSwitchId = 1;
     }
     public static final class Feeder {
         public static final int motorId = 18;
