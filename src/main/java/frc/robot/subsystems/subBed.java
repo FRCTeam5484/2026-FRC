@@ -11,6 +11,7 @@ import frc.robot.Constants;
 public class subBed extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_bedMotor = new TalonFX(Constants.Bed.motorId, canbus);
+  
   public subBed() {
     configureBed();
   }
@@ -30,6 +31,7 @@ public class subBed extends SubsystemBase {
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0; // No output for error derivative
     // Peak output of 8 volts
+
     configs.Voltage.withPeakForwardVoltage(Volts.of(11)).withPeakReverseVoltage(Volts.of(-11));
 
      // Retry config apply up to 5 times, report if failure
@@ -42,9 +44,11 @@ public class subBed extends SubsystemBase {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
   }
+  // This method allows driving of the number by power setting
   public void TeleOp(double value){
     m_bedMotor.set(value);
   }
+  // This will stop all movement of the motor
   public void Stop(){
     m_bedMotor.stopMotor();
   }

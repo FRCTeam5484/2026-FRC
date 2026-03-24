@@ -140,7 +140,7 @@ public class RobotContainer {
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
 
         /// Climb Control
-        climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()-> MathUtil.applyDeadband(-driverTwo.getLeftY(), 0.05)));
+        climb.setDefaultCommand(Commands.run(()->climb.TeleOpNoSafe(MathUtil.applyDeadband(-driverTwo.getLeftY(), 0.05)), climb));
         driverTwo.leftBumper().whileTrue(new cmdAuto_ClimbLower(climb));
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 

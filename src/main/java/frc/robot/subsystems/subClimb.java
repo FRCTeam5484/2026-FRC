@@ -78,6 +78,9 @@ public class subClimb extends SubsystemBase {
       m_climbMotor.set(value);
     }
   }
+  public void TeleOpNoSafe(double value){
+    m_climbMotor.set(value);
+  }
   public void Stop(){
     m_climbMotor.stopMotor();
     m_climbMotor.setControl(m_brake);
