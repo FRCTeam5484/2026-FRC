@@ -29,7 +29,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
-        CommandScheduler.getInstance().run(); 
+        CommandScheduler.getInstance().run();
+        
         if (m_robotContainer.kUseFrontLimelight) {
             var driveState = m_robotContainer.drivetrain.getState();
             double headingDeg = driveState.Pose.getRotation().getDegrees();
@@ -77,8 +78,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 2);
-        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 2);
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 4);
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
@@ -97,6 +98,8 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         m_robotContainer.kUseFrontLimelight = false;
         m_robotContainer.kUseBackLimelight = false;
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 4);
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
