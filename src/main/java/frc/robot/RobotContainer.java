@@ -24,6 +24,7 @@ import frc.robot.commands.cmdAuto_AutoAlignShootMove;
 import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
+import frc.robot.commands.cmdAuto_HoodDown;
 import frc.robot.commands.cmdAuto_RelayToAlliance;
 import frc.robot.commands.cmdAuto_Unjam;
 import frc.robot.commands.cmdHood_TeleOp;
@@ -133,11 +134,13 @@ public class RobotContainer {
                 
         // Auto Shoot
         driverTwo.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake));
-        driverTwo.a().onFalse(new RunCommand(() -> hood.putHoodDown()));
+        driverTwo.a().onFalse(new cmdAuto_HoodDown(hood));
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
+        driverTwo.x().onFalse(new cmdAuto_HoodDown(hood));
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
+        driverTwo.y().onFalse(new cmdAuto_HoodDown(hood));
         driverTwo.start().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
-        driverTwo.start().onFalse(new InstantCommand(() -> hood.putHoodDown()));
+        driverTwo.start().onFalse(new cmdAuto_HoodDown(hood));
 
         // Reset Hood Encoder
         driverTwo.back().onTrue(new InstantCommand(() -> hood.ResetEncoder()));
@@ -153,6 +156,5 @@ public class RobotContainer {
         /// Hood Control
         driverTwo.povUp().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
         driverTwo.povDown().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
-              
     }
 }

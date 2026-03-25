@@ -93,7 +93,6 @@ public class subClimb extends SubsystemBase {
     else
     {
       m_climbMotor.set(1);
-      //m_climbMotor.setControl(m_positionVoltage.withPosition(-85));
     }
   }
   public void LowerClimb(){
@@ -104,7 +103,6 @@ public class subClimb extends SubsystemBase {
     else
     {
       m_climbMotor.set(-1);
-      //m_climbMotor.setControl(m_positionVoltage.withPosition(0));
     }
   }
 }

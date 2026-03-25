@@ -8,6 +8,7 @@ import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.classes.LimelightHelpers;
@@ -39,6 +40,10 @@ public class Robot extends TimedRobot {
             if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
                 m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
             }
+            SmartDashboard.putString("Front Limelight Pose", llMeasurement.pose.toString());
+        }
+        else{
+            SmartDashboard.putString("Front Limelight Pose", "Disabled");
         }
         if(m_robotContainer.kUseBackLimelight){
             var driveState = m_robotContainer.drivetrain.getState();
@@ -50,7 +55,13 @@ public class Robot extends TimedRobot {
             if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
                 m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
             }
+            SmartDashboard.putString("Back Limelight Pose", llMeasurement.pose.toString());
         }
+        else{
+            SmartDashboard.putString("Back Limelight Pose", "Disabled");
+        }
+        SmartDashboard.putBoolean("Front Limelight", m_robotContainer.kUseFrontLimelight);
+        SmartDashboard.putBoolean("Back Limelight", m_robotContainer.kUseBackLimelight);
     }
     
     @Override
@@ -64,8 +75,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        //m_robotContainer.limelight.configureFrontLeft();
-        //m_robotContainer.limelight.configureBackRight();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -81,6 +90,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        m_robotContainer.kUseFrontLimelight = false;
+        m_robotContainer.kUseBackLimelight = false;
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
