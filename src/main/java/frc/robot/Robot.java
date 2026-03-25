@@ -68,22 +68,27 @@ public class Robot extends TimedRobot {
     public void disabledInit() {}
 
     @Override
-    public void disabledPeriodic() {}
-
+    public void disabledPeriodic() {
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 1);
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 1);
+    }
     @Override
     public void disabledExit() {}
 
     @Override
     public void autonomousInit() {
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 2);
+        LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 2);
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        
+    }
 
     @Override
     public void autonomousExit() {}
