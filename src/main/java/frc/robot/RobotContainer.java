@@ -65,7 +65,8 @@ public class RobotContainer {
     //public final subLimelight frontLimeLight = new subLimelight(Constants.LimeLight.fieldPositionFrontLeft, drivetrain);
     //public final subLimelight backLimeLight = new subLimelight(Constants.LimeLight.fieldPositionBackRight, drivetrain);
     private final SendableChooser<Command> autoChooser;
-
+    public boolean kUseFrontLimelight = true;
+    public boolean kUseBackLimelight = true;
 
     public RobotContainer() {
         // Named Commands
@@ -82,6 +83,8 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         FollowPathCommand.warmupCommand().schedule();
+
+        ConfigureTeleOpControls();
     }
 
     public Command getAutonomousCommand() {
@@ -120,6 +123,9 @@ public class RobotContainer {
         /// Intake Controls
         driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
+
+        driverOne.start().onTrue(new InstantCommand(()->kUseBackLimelight = !kUseBackLimelight));
+        driverOne.back().onTrue(new InstantCommand(()->kUseFrontLimelight = !kUseFrontLimelight));
 
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
