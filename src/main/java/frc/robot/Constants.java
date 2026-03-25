@@ -21,7 +21,7 @@ public class Constants {
         public static final int motorId = 19;
         public static final int canEncoderId = 20;
 
-        public static final double topPosition = 0.6;
+        public static final double topPosition = 0.8;
         public static final double bottomPosition = -0.08;
     }
     public static final class Hopper{

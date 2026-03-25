@@ -38,12 +38,12 @@ public class subHood extends SubsystemBase {
 
   private void ConfigureHood(){
     TalonFXConfiguration configs = new TalonFXConfiguration();
-    configs.Slot0.kP = 2.5; // An error of 1 rotation results in 2.4 V output
+    configs.Slot0.kP = 1.8; // An error of 1 rotation results in 2.4 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0; // A velocity of 1 rps results in 0.1 V output
     // Peak output of 8 V
     configs.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
-    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+    configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
     // Retry config apply up to 5 times, report if failure 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -62,10 +62,10 @@ public class subHood extends SubsystemBase {
   }
 
   public void TeleOp(double joystickValue) {
-    if(joystickValue < 0 && m_hoodMotor.getPosition().getValueAsDouble() <= 0){
+    if(joystickValue > 0 && m_hoodMotor.getPosition().getValueAsDouble() <= 0){
       Stop();
     }
-    else if(joystickValue > 0 && m_hoodMotor.getPosition().getValueAsDouble() >= 0.6){
+    else if(joystickValue < 0 && m_hoodMotor.getPosition().getValueAsDouble() >= 0.6){
       Stop();
     }
     else{

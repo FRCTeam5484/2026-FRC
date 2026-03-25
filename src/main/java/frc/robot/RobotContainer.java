@@ -26,6 +26,7 @@ import frc.robot.commands.cmdAuto_ClimbLower;
 import frc.robot.commands.cmdAuto_ClimbRaise;
 import frc.robot.commands.cmdAuto_RelayToAlliance;
 import frc.robot.commands.cmdAuto_Unjam;
+import frc.robot.commands.cmdHood_TeleOp;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
 import frc.robot.subsystems.subBed;
@@ -61,8 +62,8 @@ public class RobotContainer {
     public final subIntake intake = new subIntake();
     public final subHood hood = new subHood();
     public final subShooter shooter = new subShooter();
-    public final subLimelight frontLimeLight = new subLimelight(Constants.LimeLight.fieldPositionFrontLeft, drivetrain);
-    public final subLimelight backLimeLight = new subLimelight(Constants.LimeLight.fieldPositionBackRight, drivetrain);
+    //public final subLimelight frontLimeLight = new subLimelight(Constants.LimeLight.fieldPositionFrontLeft, drivetrain);
+    //public final subLimelight backLimeLight = new subLimelight(Constants.LimeLight.fieldPositionBackRight, drivetrain);
     private final SendableChooser<Command> autoChooser;
 
 
@@ -125,8 +126,8 @@ public class RobotContainer {
         /////////////////////////////////////
                 
         // Auto Shoot
-        driverTwo.a().whileTrue(new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->-driverOne.getLeftY()));
-        driverTwo.a().onFalse(new InstantCommand(() -> hood.putHoodDown()));
+        driverTwo.a().whileTrue(new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake));
+        driverTwo.a().onFalse(new RunCommand(() -> hood.putHoodDown()));
         driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));
         driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));
         driverTwo.start().whileTrue(new cmdAuto_RelayToAlliance(hood, shooter, bed, feeder));
@@ -144,7 +145,8 @@ public class RobotContainer {
         driverTwo.rightBumper().whileTrue(new cmdAuto_ClimbRaise(climb));
 
         /// Hood Control
-        hood.setDefaultCommand(Commands.run(()->hood.TeleOpNoSafe(MathUtil.applyDeadband(-driverTwo.getRightY(), 0.1)*0.1), hood));  
+        driverTwo.povUp().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
+        driverTwo.povDown().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
               
     }
 }
