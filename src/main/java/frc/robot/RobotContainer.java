@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import frc.robot.classes.LimelightHelpers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
 import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
@@ -36,8 +35,7 @@ import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
 import frc.robot.subsystems.subFeeder;
 import frc.robot.subsystems.subHopper;
-import frc.robot.subsystems.subIntake;
-import frc.robot.subsystems.subLimelight;
+import frc.robot.subsystems.subIntake; 
 import frc.robot.subsystems.subShooter;
 import frc.robot.subsystems.subHood;
 
