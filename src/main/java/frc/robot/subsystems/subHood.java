@@ -83,6 +83,7 @@ public class subHood extends SubsystemBase {
   }
   public void setPosition(double position)
   {
+    SmartDashboard.putNumber("Hood Command", position);
     m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(position));
   }
 
@@ -96,7 +97,7 @@ public class subHood extends SubsystemBase {
   }
 
   public void putHoodDown(){
-    setPosition(Constants.Hood.bottomPosition);
+    setPosition(Constants.Hood.closed);
   }
 
   public double hoodPositionCommand()

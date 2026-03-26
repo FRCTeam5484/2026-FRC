@@ -109,7 +109,7 @@ public class subShooter extends SubsystemBase {
   {    
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {
-      double MaxRPM = 6000;
+      double MaxRPM = 5500;
       double MinRPM = 3500;
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
       distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
