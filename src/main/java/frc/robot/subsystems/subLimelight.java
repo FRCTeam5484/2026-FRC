@@ -1,82 +1,89 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.classes.LimelightHelpers;
-import frc.robot.classes.LimelightHelpers.PoseEstimate;
 
-@Logged
 public class subLimelight extends SubsystemBase {
-
-  /** Limelight name. */
-  private final String m_limelightName;
-
-  private final subDrive m_drivetrain;
-
-  /** Cached last valid pose estimate from the Limelight. */
-  private PoseEstimate lastPoseEstimate = new PoseEstimate();
-
-  /** Creates a new Limelight. */
-  public subLimelight(String limelightName, subDrive drivetrain) {
-    m_limelightName = limelightName;
-    m_drivetrain = drivetrain;
+  private boolean UseFrontLimelight = true;
+  private boolean UseBackLimelight = true;
+  subDrive drive;
+  public subLimelight(subDrive drive) {
+    this.drive = drive;
   }
 
   @Override
   public void periodic() {
-    // Called once per scheduler run: pull a fresh pose estimate from Limelight
-    // using the WPILib (blue alliance) coordinate frame.
-    PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName);
+    sendDashboard();
+    updateFrontPose();        
+    updateBackPose();
+  }
+  private void updateFrontPose(){
+    if (UseFrontLimelight) {
+        var driveState = drive.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-    // Validate that the estimate is trustworthy (e.g., sufficient targets, ambiguity, etc.).
-    boolean valid = LimelightHelpers.validPoseEstimate(poseEstimate);
-    if (valid) {
-      // Cache the latest valid estimate so it can be accessed elsewhere when needed.
-      lastPoseEstimate = poseEstimate;
-
-      // Heuristic measurement noise model:
-      // - Uncertainty grows with the square of the average tag distance
-      // - Uncertainty decreases as more tags are observed
-      // These values inform pose estimators how much to trust this measurement.
-      // Lower the value higher the trust. https://www.desmos.com/calculator/2e0cd4c36b
-      double xyStandardDev = 0.5 * Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
-      double rotationStandardDev =
-          5.0 * Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
-
-      // Provide the measurement (pose, timestamp, per-axis std devs) to the drivetrain,
-      // typically a pose estimator. X/Y in meters, rotation in radians.
-      m_drivetrain.addVisionMeasurement(
-          poseEstimate.pose,
-          poseEstimate.timestampSeconds,
-          VecBuilder.fill(xyStandardDev, xyStandardDev, rotationStandardDev));
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionFrontLeft, headingDeg, 0, 0, 0, 0, 0);
+        var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionFrontLeft);
+        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            drive.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        }
+        SmartDashboard.putString("Front Limelight Pose", llMeasurement.pose.toString());
+    }
+    else{
+        SmartDashboard.putString("Front Limelight Pose", "Disabled");
     }
   }
-
-  /** Getter for last pose estimate. */
-  private PoseEstimate getPoseEstimate() {
-    return lastPoseEstimate;
+  private void updateBackPose(){
+    if(UseBackLimelight){
+        var driveState = drive.getState();
+        double headingDeg = driveState.Pose.getRotation().getDegrees();
+        double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+        
+        LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionBackRight, headingDeg, 0, 0, 0, 0, 0);
+        var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimeLight.fieldPositionBackRight);
+        if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+            drive.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+        }
+        SmartDashboard.putString("Back Limelight Pose", llMeasurement.pose.toString());
+    }
+    else{
+        SmartDashboard.putString("Back Limelight Pose", "Disabled");
+    }
   }
-
-  // Expose latest vision values for Epilogue logging/telemetry.
-  /** Logging: latest estimated robot pose from vision. */
-  public Pose2d getPose() {
-    return getPoseEstimate().pose;
+  public void sendDashboard(){
+    SmartDashboard.putBoolean("Front Limelight", UseFrontLimelight);
+    SmartDashboard.putBoolean("Back Limelight", UseBackLimelight);
   }
-
-  /** Logging: timestamp (seconds) of the last valid vision estimate. */
-  public double getTimestampSeconds() {
-    return getPoseEstimate().timestampSeconds;
+  public boolean isFrontEnabled(){
+    return UseFrontLimelight;
+  } 
+  public boolean isBackEnabled(){
+    return UseBackLimelight;
   }
-
-  /** Logging: average tag distance used in the last estimate (meters). */
-  public double getAvgTagDist() {
-    return getPoseEstimate().avgTagDist;
+  public void toggleFront(){
+    UseFrontLimelight = !UseFrontLimelight;
   }
-
-  /** Logging: number of tags contributing to the last estimate. */
-  public double getTagCount() {
-    return getPoseEstimate().tagCount;
+  public void toggleBack(){
+    UseBackLimelight = !UseBackLimelight;
+  }
+  public void disablePose(){
+    UseBackLimelight = false;
+    UseFrontLimelight = false;
+  }
+  public void enablePose(){
+    UseBackLimelight = true;
+    UseFrontLimelight = true;
+  }
+  public void setMode1(){
+    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 1);
+    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 1);
+  }
+  public void setMode4(){
+    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
+    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 4);
   }
 }

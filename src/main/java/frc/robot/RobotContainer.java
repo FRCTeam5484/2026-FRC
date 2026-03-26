@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,9 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.classes.Telemetry;
@@ -34,13 +31,13 @@ import frc.robot.commands.cmdHopper_Extend;
 import frc.robot.commands.cmdHopper_Retract;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
-import frc.robot.commands.cmdShooter_TeleOp;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
 import frc.robot.subsystems.subFeeder;
 import frc.robot.subsystems.subHopper;
-import frc.robot.subsystems.subIntake; 
+import frc.robot.subsystems.subIntake;
+import frc.robot.subsystems.subLimelight;
 import frc.robot.subsystems.subShooter;
 import frc.robot.subsystems.subHood;
 
@@ -53,8 +50,8 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 5% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
             // At some point, we need to change this to DriveRequestType.Velocity for closed-loop control but need to TUNE the PID
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(MaxSpeed);
     private final CommandXboxController driverOne = new CommandXboxController(0);
     private final CommandXboxController driverTwo = new CommandXboxController(1);
@@ -66,11 +63,8 @@ public class RobotContainer {
     public final subIntake intake = new subIntake();
     public final subHood hood = new subHood();
     public final subShooter shooter = new subShooter();
-    //public final subLimelight frontLimeLight = new subLimelight(Constants.LimeLight.fieldPositionFrontLeft, drivetrain);
-    //public final subLimelight backLimeLight = new subLimelight(Constants.LimeLight.fieldPositionBackRight, drivetrain);
-    private final SendableChooser<Command> autoChooser;
-    public boolean kUseFrontLimelight = true;
-    public boolean kUseBackLimelight = true;
+    public final subLimelight lime = new subLimelight(drivetrain);
+    private final SendableChooser<Command> autoChooser;    
 
     public RobotContainer() {
         // Named Commands
@@ -78,10 +72,11 @@ public class RobotContainer {
         NamedCommands.registerCommand("Auto Shoot", new cmdAuto_AutoShoot(hood, shooter, bed, feeder).withTimeout(5));
         NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(4));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdClimb_Lower(climb).withTimeout(4));
-        NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(4));
+        NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(5));
         NamedCommands.registerCommand("Auto Align and Shoot", new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake).withTimeout(4));
         NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper));
         NamedCommands.registerCommand("Auto Retract Hopper", new cmdHopper_Retract(hopper));
+        NamedCommands.registerCommand("Auto Run Intake", new cmdIntake_TeleOp(intake, ()->0.7).withTimeout(5));
         
         DriverStation.silenceJoystickConnectionWarning(true);
         autoChooser = AutoBuilder.buildAutoChooser("BackShootSTOP");
@@ -137,8 +132,8 @@ public class RobotContainer {
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
 
         /// Limelight Enable/Disable
-        driverOne.start().onTrue(new InstantCommand(()->kUseBackLimelight = !kUseBackLimelight));
-        driverOne.back().onTrue(new InstantCommand(()->kUseFrontLimelight = !kUseFrontLimelight));
+        driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
+        driverOne.back().onTrue(new InstantCommand(()->lime.toggleFront()));
 
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
