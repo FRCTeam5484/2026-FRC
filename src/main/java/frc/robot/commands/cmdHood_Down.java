@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subHood;
 
-public class cmdAuto_HoodDown extends Command {
+public class cmdHood_Down extends Command {
   subHood hood;
   Timer time = new Timer();
-  public cmdAuto_HoodDown(subHood hood) {
+  public cmdHood_Down(subHood hood) {
     this.hood = hood;
     addRequirements(this.hood);
   }

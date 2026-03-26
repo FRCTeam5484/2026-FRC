@@ -57,7 +57,7 @@ public class cmdAuto_AutoAlignAndShoot extends Command {
       hood.setPosition();
       shooter.setShooterPower();
       //shooter.setShooterRPM();
-      if(timer.get() > 1.5){
+      if(timer.get() > 1){
         intake.TeleOp(.5);
         feeder.TeleOp(1);
         bed.TeleOp(1);

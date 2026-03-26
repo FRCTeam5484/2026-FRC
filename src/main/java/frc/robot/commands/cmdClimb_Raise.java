@@ -3,9 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subClimb;
 
-public class cmdAuto_ClimbRaise extends Command {
+public class cmdClimb_Raise extends Command {
   subClimb climb;
-  public cmdAuto_ClimbRaise(subClimb climb) {
+  public cmdClimb_Raise(subClimb climb) {
     this.climb = climb;
     addRequirements(this.climb);
   }

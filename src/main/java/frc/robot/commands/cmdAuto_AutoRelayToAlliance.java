@@ -7,14 +7,14 @@ import frc.robot.subsystems.subFeeder;
 import frc.robot.subsystems.subHood;
 import frc.robot.subsystems.subShooter;
 
-public class cmdAuto_RelayToAlliance extends Command {
+public class cmdAuto_AutoRelayToAlliance extends Command {
   subHood hood;
   subShooter shooter;
   subBed bed;
   subFeeder feeder;
   Timer timer = new Timer();
 
-  public cmdAuto_RelayToAlliance(subHood hood, subShooter shooter, subBed bed, subFeeder feeder) {
+  public cmdAuto_AutoRelayToAlliance(subHood hood, subShooter shooter, subBed bed, subFeeder feeder) {
     this.hood = hood;
     this.shooter = shooter;
     this.bed = bed;
@@ -31,8 +31,8 @@ public class cmdAuto_RelayToAlliance extends Command {
   @Override
   public void execute() {
     hood.setPosition(0.6);
-    shooter.TeleOp(0.7);
-    if(timer.get() > 1.5){
+    shooter.TeleOp(1);
+    if(timer.get() > 1){
      feeder.TeleOp(1);
       bed.TeleOp(1);
     }
