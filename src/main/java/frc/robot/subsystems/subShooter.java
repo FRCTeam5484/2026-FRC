@@ -36,7 +36,7 @@ public class subShooter extends SubsystemBase {
   public void periodic() {
     isShooterAtSpeed();
     SmartDashboard.putNumber("Shooter Power Command", CommandPower());
-    SmartDashboard.putNumber("Shooter RPM Command", CommandRPM()/60);
+    SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
     
