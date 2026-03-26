@@ -57,6 +57,9 @@ public class subLimelight extends SubsystemBase {
   public void sendDashboard(){
     SmartDashboard.putBoolean("Front Limelight", UseFrontLimelight);
     SmartDashboard.putBoolean("Back Limelight", UseBackLimelight);
+    SmartDashboard.putBoolean("Shooter Has Target", shooterHasTarget());
+    SmartDashboard.putBoolean("Front Has Target", frontHasTarget());
+    SmartDashboard.putBoolean("Back Has Target", backHasTarget());
   }
   public boolean isFrontEnabled(){
     return UseFrontLimelight;
@@ -85,5 +88,14 @@ public class subLimelight extends SubsystemBase {
   public void setMode4(){
     LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
     LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 4);
+  }
+  public boolean frontHasTarget(){
+    return LimelightHelpers.getTV(Constants.LimeLight.fieldPositionFrontLeft);
+  }
+  public boolean backHasTarget(){
+    return LimelightHelpers.getTV(Constants.LimeLight.fieldPositionBackRight);
+  }
+  public boolean shooterHasTarget(){
+    return LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName);
   }
 }
