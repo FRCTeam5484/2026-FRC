@@ -21,18 +21,20 @@ import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
 import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
 import frc.robot.commands.cmdAuto_AutoAlignShootMove;
-import frc.robot.commands.cmdAuto_AutoShoot;
+import frc.robot.commands.cmdAuto_DeadcodeShoot;
 import frc.robot.commands.cmdClimb_Lower;
 import frc.robot.commands.cmdClimb_Raise;
 import frc.robot.commands.cmdClimb_TeleOp;
 import frc.robot.commands.cmdHood_Down;
 import frc.robot.commands.cmdAuto_AutoRelayToAlliance;
+import frc.robot.commands.cmdAuto_AutoShoot;
 import frc.robot.commands.cmdAuto_Unjam;
 import frc.robot.commands.cmdHood_TeleOp;
 import frc.robot.commands.cmdHopper_Extend;
 import frc.robot.commands.cmdHopper_Retract;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
+import frc.robot.commands.cmdShooter_TeleOp;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
@@ -72,16 +74,17 @@ public class RobotContainer {
 
     public RobotContainer() {
         // Named Commands
-        NamedCommands.registerCommand("Shooter Auto", new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.70).withTimeout(4));
+        NamedCommands.registerCommand("Shooter DeadCode", new cmdAuto_DeadcodeShoot(bed, feeder, shooter, intake, 0.70).withTimeout(4));
+        NamedCommands.registerCommand("Auto Shoot", new cmdAuto_AutoShoot(hood, shooter, bed, feeder).withTimeout(5));
         NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(4));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdClimb_Lower(climb).withTimeout(4));
         NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(4));
         NamedCommands.registerCommand("Auto Align and Shoot", new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake).withTimeout(4));
-        NamedCommands.registerCommand("Extend Hopper Auto", new cmdHopper_Extend(hopper));
-        NamedCommands.registerCommand("Retract Hopper Auto", new cmdHopper_Retract(hopper));
+        NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper));
+        NamedCommands.registerCommand("Auto Retract Hopper", new cmdHopper_Retract(hopper));
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        autoChooser = AutoBuilder.buildAutoChooser("ShootNoMove");
+        autoChooser = AutoBuilder.buildAutoChooser("BackShootSTOP");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         FollowPathCommand.warmupCommand().schedule();
@@ -143,8 +146,8 @@ public class RobotContainer {
                 
         // Auto Shoot
         driverTwo.a().whileTrue(new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->-driverOne.getLeftY()  * MaxSpeed));        
-        driverTwo.x().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 1.0));        
-        driverTwo.y().whileTrue(new cmdAuto_AutoShoot(bed, feeder, shooter, intake, 0.75));        
+        driverTwo.x().whileTrue(new cmdAuto_DeadcodeShoot(bed, feeder, shooter, intake, 1.0));        
+        driverTwo.y().whileTrue(new cmdAuto_DeadcodeShoot(bed, feeder, shooter, intake, 0.75));        
         driverTwo.start().whileTrue(new cmdAuto_AutoRelayToAlliance(hood, shooter, bed, feeder));
         
         // Reset Hood Encoder

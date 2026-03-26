@@ -11,22 +11,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Climb Raise Auto"
+                  "name": "Auto Shoot"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Test"
+                  "pathName": "DriveBackALittle"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb Lower Auto"
           }
         }
       ]
