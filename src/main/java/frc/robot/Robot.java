@@ -78,6 +78,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        m_robotContainer.kUseFrontLimelight = false;
+        m_robotContainer.kUseBackLimelight = true;
         LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
         LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionFrontLeft, 4);
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();

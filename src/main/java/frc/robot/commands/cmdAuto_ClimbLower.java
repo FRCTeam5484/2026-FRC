@@ -24,6 +24,6 @@ public class cmdAuto_ClimbLower extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return !m_climb.m_bottomlimitSwitch.get();
   }
 }

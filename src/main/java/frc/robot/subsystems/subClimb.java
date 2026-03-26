@@ -18,8 +18,8 @@ public class subClimb extends SubsystemBase {
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_climbMotor = new TalonFX(Constants.Climb.motorId, canbus);
   //private final CANcoder m_cancoder = new CANcoder(Constants.Climb.canCoderId, canbus);
-  DigitalInput m_toplimitSwitch = new DigitalInput(Constants.Climb.topLimitSwitchId);
-  DigitalInput m_bottomlimitSwitch = new DigitalInput(Constants.Climb.bottomLimitSwitchId);
+  public DigitalInput m_toplimitSwitch = new DigitalInput(Constants.Climb.topLimitSwitchId);
+  public DigitalInput m_bottomlimitSwitch = new DigitalInput(Constants.Climb.bottomLimitSwitchId);
   private final NeutralOut m_brake = new NeutralOut();
 
   public subClimb() {
