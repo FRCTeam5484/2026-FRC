@@ -8,46 +8,46 @@ import frc.robot.subsystems.subIntake;
 import frc.robot.subsystems.subShooter;
 
 public class cmdAuto_AutoShoot extends Command {
-  subBed m_bed;
-  subFeeder m_feeder;
-  subShooter m_shooter;
-  subIntake m_intake;
+  subBed bed;
+  subFeeder feeder;
+  subShooter shooter;
+  subIntake intake;
   
   Double m_power;
   Timer timer = new Timer();
   public cmdAuto_AutoShoot(subBed bed, subFeeder feeder, subShooter shooter, subIntake intake, Double power) {
-    m_bed = bed;
-    m_feeder = feeder;
-    m_shooter = shooter;
-    m_intake = intake;
+    this.bed = bed;
+    this.feeder = feeder;
+    this.shooter = shooter;
+    this.intake = intake;
   
     m_power = power;
-    addRequirements(m_bed, m_feeder, m_shooter, m_intake);
+    addRequirements(this.bed, this.feeder, this.shooter, this.intake);
   }
 
   @Override
   public void initialize() {
     timer.reset();
     timer.start();
-    m_shooter.TeleOp(m_power);
+    shooter.TeleOp(m_power);
   }
 
   @Override
   public void execute() {
     if(timer.get() > 2){
-      m_intake.TeleOp(.5);
-      m_bed.TeleOp(1);
-      m_feeder.TeleOp(1);
+      intake.TeleOp(.5);
+      bed.TeleOp(1);
+      feeder.TeleOp(1);
      
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_bed.Stop();
-    m_feeder.Stop();
-    m_shooter.Stop();
-    m_intake.Stop();
+    bed.Stop();
+    feeder.Stop();
+    shooter.Stop();
+    intake.Stop();
     
   }
 

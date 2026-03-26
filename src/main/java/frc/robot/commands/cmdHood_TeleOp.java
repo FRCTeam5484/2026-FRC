@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subHood;
 
 public class cmdHood_TeleOp extends Command {
-  subHood m_hood;
-  DoubleSupplier m_speed;
+  subHood hood;
+  DoubleSupplier speed;
   public cmdHood_TeleOp(subHood hood, DoubleSupplier speed) {
-    m_hood = hood;
-    m_speed = speed;
-    addRequirements(m_hood);
+    this.hood = hood;
+    this.speed = speed;
+    addRequirements(this.hood);
   }
 
   @Override
@@ -19,12 +19,12 @@ public class cmdHood_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_hood.TeleOpNoSafe(m_speed.getAsDouble());
+    hood.TeleOpNoSafe(speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_hood.Stop();
+    hood.Stop();
   }
 
   @Override

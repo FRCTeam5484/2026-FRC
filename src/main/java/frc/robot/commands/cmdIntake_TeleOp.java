@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subIntake;
 
 public class cmdIntake_TeleOp extends Command {
-  subIntake m_intake;
-  DoubleSupplier m_speed;
+  subIntake intake;
+  DoubleSupplier speed;
   public cmdIntake_TeleOp(subIntake intake, DoubleSupplier speed) {
-    m_intake = intake;
-    m_speed = speed;
-    addRequirements(m_intake);
+    this.intake = intake;
+    this.speed = speed;
+    addRequirements(this.intake);
   }
 
   @Override
@@ -19,12 +19,12 @@ public class cmdIntake_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_intake.TeleOp(m_speed.getAsDouble());
+    intake.TeleOp(speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_intake.Stop();
+    intake.Stop();
   }
 
   @Override

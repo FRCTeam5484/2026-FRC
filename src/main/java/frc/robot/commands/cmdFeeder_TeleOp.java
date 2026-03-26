@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subFeeder;
 
 public class cmdFeeder_TeleOp extends Command {
-  subFeeder m_feeder;
-  DoubleSupplier m_speed;
+  subFeeder feeder;
+  DoubleSupplier speed;
   public cmdFeeder_TeleOp(subFeeder feeder, DoubleSupplier speed) {
-    m_feeder = feeder;
-    m_speed = speed;
-    addRequirements(m_feeder);
+    this.feeder = feeder;
+    this.speed = speed;
+    addRequirements(this.feeder);
   }
 
   @Override
@@ -19,12 +19,12 @@ public class cmdFeeder_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_feeder.TeleOp(m_speed.getAsDouble());
+    feeder.TeleOp(speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_feeder.Stop();
+    feeder.Stop();
   }
 
   @Override

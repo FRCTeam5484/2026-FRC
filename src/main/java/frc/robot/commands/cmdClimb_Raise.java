@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subClimb;
 
-public class cmdAuto_ClimbLower extends Command {
-  subClimb m_climb;
-  public cmdAuto_ClimbLower(subClimb climb) {
-    m_climb = climb;
-    addRequirements(climb);
+public class cmdAuto_ClimbRaise extends Command {
+  subClimb climb;
+  public cmdAuto_ClimbRaise(subClimb climb) {
+    this.climb = climb;
+    addRequirements(this.climb);
   }
 
   @Override
@@ -15,15 +15,16 @@ public class cmdAuto_ClimbLower extends Command {
 
   @Override
   public void execute() {
-    m_climb.LowerClimb();
+    climb.RaiseClimb();
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_climb.Stop();}
+    climb.Stop();
+  }
 
   @Override
   public boolean isFinished() {
-    return !m_climb.m_bottomlimitSwitch.get();
+    return !climb.m_toplimitSwitch.get();
   }
 }

@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.subShooter;
 
 public class cmdShooter_TeleOp extends Command {
-  subShooter m_shooter;
-  DoubleSupplier m_speed;
+  subShooter shooter;
+  DoubleSupplier speed;
   public cmdShooter_TeleOp(subShooter shooter, DoubleSupplier speed) {
-    m_shooter = shooter;
-    m_speed = speed;
-    addRequirements(m_shooter);
+    this.shooter = shooter;
+    this.speed = speed;
+    addRequirements(this.shooter);
   }
 
   @Override
@@ -19,12 +19,12 @@ public class cmdShooter_TeleOp extends Command {
 
   @Override
   public void execute() {
-    m_shooter.TeleOp(m_speed.getAsDouble());
+    shooter.TeleOp(speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_shooter.Stop();
+    shooter.Stop();
   }
 
   @Override
