@@ -39,7 +39,7 @@ public class subShooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter RPM Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
-    SmartDashboard.putBoolean("Shooter Has Target", LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName));
+    
   }
 
   private void ConfigureShooter(){
@@ -52,7 +52,7 @@ public class subShooter extends SubsystemBase {
     configs.Slot0.kP = 1.5; // An error of 1 rotation per second results in 0.11 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0; // No output for error derivative
-    configs.Voltage.withPeakForwardVoltage(Volts.of(12)).withPeakReverseVoltage(Volts.of(-12));
+    configs.Voltage.withPeakForwardVoltage(Volts.of(12)).withPeakReverseVoltage(Volts.of(0));
     configs.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
      /* Retry config apply up to 5 times, report if failure */
