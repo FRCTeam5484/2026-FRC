@@ -43,5 +43,8 @@ public class Constants {
     public static final class Shooter {
         public static final int leftMotorId = 21;
         public static final int rightMotorId = 22;
+
+        public static final double MaxRPM = 5500;
+        public static final double MinRPM = 3500;
     }
 }
