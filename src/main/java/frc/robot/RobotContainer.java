@@ -112,7 +112,7 @@ public class RobotContainer {
         climb.setDefaultCommand(new cmdClimb_TeleOp(climb, ()->MathUtil.applyDeadband(-driverTwo.getLeftY(), 0.05)));
 
         /// Hood Default
-        hood.setDefaultCommand(new cmdHood_Down(hood));
+        hood.setDefaultCommand(new cmdHood_TeleOp(hood, ()->MathUtil.applyDeadband(-driverTwo.getRightY(), 0.05))); //new cmdHood_Down(hood));
 
 
         /////////////////////////////////////
