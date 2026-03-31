@@ -10,6 +10,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -104,10 +106,13 @@ public class subHood extends SubsystemBase {
   {
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {
-      double distance = LimelightHelpers.getTY(LimeLight.shooterTargetingName);
+      /*double distance = LimelightHelpers.getTY(LimeLight.shooterTargetingName);
       distance = Math.max(Constants.Hood.bottomPosition, Math.min(Constants.Hood.topPosition, distance));
       double normalized = (distance - Constants.Hood.bottomPosition) / (Constants.Hood.topPosition - Constants.Hood.bottomPosition);
       return Constants.Hood.topPosition + normalized * (Constants.Hood.bottomPosition - Constants.Hood.topPosition);
+      */
+       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+     return MathUtil.clamp(-0.01 * distance +.435, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
     }
     else
     {

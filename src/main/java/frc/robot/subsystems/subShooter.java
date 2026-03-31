@@ -14,6 +14,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class subShooter extends SubsystemBase {
@@ -39,6 +41,7 @@ public class subShooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
+
     
   }
 
@@ -108,11 +111,16 @@ public class subShooter extends SubsystemBase {
   public double CommandRPM()
   {    
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
-    {
+    {/* 
       double distance = -LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
       distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
       double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
       return Constants.Shooter.MaxRPM + normalized * (Constants.Shooter.MinRPM - Constants.Shooter.MaxRPM);
+      */
+      
+      double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);  
+     return MathUtil.clamp(-53.6735 * distance + 4604.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+
     }
     else
     {
