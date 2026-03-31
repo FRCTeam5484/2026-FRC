@@ -2,8 +2,8 @@ package frc.robot;
 
 public class Constants {
     public static final class TargetingDistance{
-        public static final double minDistance = 24.85;
-        public static final double maxDistance = -27;
+        public static final double minDistance = 23;
+        public static final double maxDistance = -26;
     }
     public static final class Bed{
         public static final int motorId = 14;
@@ -21,8 +21,8 @@ public class Constants {
         public static final int motorId = 19;
         public static final int canEncoderId = 20;
 
-        public static final double topPosition = 0.5;
-        public static final double bottomPosition = 0.1;
+        public static final double topPosition = 0.7; // Alter this for Hood Top
+        public static final double bottomPosition = 0.2; // Alter this for hood bottom
         public static final double closed = -0.08;
     }
     public static final class Hopper{
@@ -44,7 +44,7 @@ public class Constants {
         public static final int leftMotorId = 21;
         public static final int rightMotorId = 22;
 
-        public static final double MaxRPM = 5500;
-        public static final double MinRPM = 3500;
+        public static final double MaxRPM = 5570; // Alter this for max RPM
+        public static final double MinRPM = 3370; // Alter this for min
     }
 }
