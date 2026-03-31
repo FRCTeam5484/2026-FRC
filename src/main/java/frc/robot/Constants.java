@@ -2,8 +2,8 @@ package frc.robot;
 
 public class Constants {
     public static final class TargetingDistance{
-        public static final double minDistance = 23;
-        public static final double maxDistance = -26;
+        public static final double minDistance = -11;
+        public static final double maxDistance = 12;
     }
     public static final class Bed{
         public static final int motorId = 14;
