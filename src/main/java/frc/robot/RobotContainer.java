@@ -123,11 +123,15 @@ public class RobotContainer {
         /// Hopper Controls
         driverOne.y().onTrue(new InstantCommand(()-> hopper.ResetEncoder(), hopper));
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
+        driverOne.leftBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
+        driverOne.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
         
         /// Intake Controls
         driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
+        driverOne.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
+        driverOne.rightTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
 
         /// Limelight Enable/Disable
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
