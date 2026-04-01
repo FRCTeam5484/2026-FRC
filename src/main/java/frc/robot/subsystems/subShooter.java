@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.classes.LimelightHelpers;
 import static edu.wpi.first.units.Units.*;
+
+import javax.lang.model.util.ElementScanner14;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -41,6 +44,7 @@ public class subShooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
+    SmartDashboard.putNumber("Shooter RPM Command", CommandRPM());
 
     
   }
@@ -119,8 +123,26 @@ public class subShooter extends SubsystemBase {
       */
       
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);  
-     return MathUtil.clamp(-53.6735 * distance + 4604.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-
+      if (distance>-2) 
+      {
+      return MathUtil.clamp(-65.6735 * distance + 4004.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      }
+      else if (distance>-12 && distance<=-2) 
+      {
+      return MathUtil.clamp(-65.6735 * distance + 3104.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      }
+      else if(distance<=-12 && distance>-20)
+      {
+      return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      }
+      else if (distance<=-20)
+      {
+      return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      }
+      else
+      {
+      return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      }
     }
     else
     {

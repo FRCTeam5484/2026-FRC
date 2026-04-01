@@ -21,7 +21,7 @@ public class Constants {
         public static final int motorId = 19;
         public static final int canEncoderId = 20;
 
-        public static final double topPosition = 0.7; // Alter this for Hood Top
+        public static final double topPosition = 0.73; // Alter this for Hood Top
         public static final double bottomPosition = 0.2; // Alter this for hood bottom
         public static final double closed = -0.08;
     }
@@ -45,6 +45,6 @@ public class Constants {
         public static final int rightMotorId = 22;
 
         public static final double MaxRPM = 6000; // Alter this for max RPM
-        public static final double MinRPM = 3370; // Alter this for min
+        public static final double MinRPM = 3000; // Alter this for min
     }
 }
