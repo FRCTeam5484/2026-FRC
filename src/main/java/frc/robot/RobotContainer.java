@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.classes.Telemetry;
 import frc.robot.classes.TunerConstants;
-import frc.robot.commands.cmdAuto_AutoAlignAndShoot;
 import frc.robot.commands.cmdAuto_AutoAlignShootMove;
 import frc.robot.commands.cmdAuto_DeadcodeShoot;
 import frc.robot.commands.cmdClimb_Lower;
@@ -73,7 +72,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(4));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdClimb_Lower(climb).withTimeout(4));
         NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(5));
-        NamedCommands.registerCommand("Auto Align and Shoot", new cmdAuto_AutoAlignAndShoot(drivetrain, hood, shooter, bed, feeder, intake).withTimeout(4));
         NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper));
         NamedCommands.registerCommand("Auto Retract Hopper", new cmdHopper_Retract(hopper));
         NamedCommands.registerCommand("Auto Run Intake", new cmdIntake_TeleOp(intake, ()->0.7).withTimeout(5));
@@ -125,11 +123,15 @@ public class RobotContainer {
         /// Hopper Controls
         driverOne.y().onTrue(new InstantCommand(()-> hopper.ResetEncoder(), hopper));
         driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
+        driverOne.leftBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
+        driverOne.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
         
         /// Intake Controls
         driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
+        driverOne.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
         driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
+        driverOne.rightTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
 
         /// Limelight Enable/Disable
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));

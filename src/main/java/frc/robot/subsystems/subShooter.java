@@ -26,12 +26,11 @@ public class subShooter extends SubsystemBase {
   public String activeHub;
   public boolean myHubActive = false;
   public boolean shooterAtSpeed = false;
-  public double shooterRPM = 0;
   private final CANBus canbus = new CANBus("SubSystems");
   private final TalonFX m_leftLaunchMotor = new TalonFX(Constants.Shooter.leftMotorId, canbus);
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
-  
+  private double currentRPMCommand = 0;
   
   public subShooter() {
     ConfigureShooter();
@@ -40,7 +39,6 @@ public class subShooter extends SubsystemBase {
   @Override
   public void periodic() {
     isShooterAtSpeed();
-    SmartDashboard.putNumber("Shooter Power Command", CommandPower());
     SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
@@ -80,68 +78,45 @@ public class subShooter extends SubsystemBase {
   }
   
   public void setShooterRPM() {
-    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(CommandRPM() / 60));
-  }
-
-  public void setShooterPower() {
-    m_leftLaunchMotor.set(CommandPower());
+    if(currentRPMCommand != CommandRPM())
+    {
+      currentRPMCommand = CommandRPM();
+      m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(currentRPMCommand / 60));
+    }
   }
   
   public void isShooterAtSpeed() {
-    shooterAtSpeed = m_leftLaunchMotor.getClosedLoopError().isNear(shooterRPM, 1.0);
+    shooterAtSpeed = m_leftLaunchMotor.getClosedLoopError().isNear(m_leftLaunchMotor.getVelocity().getValueAsDouble(), 10.0);
   }
 
   public void Stop() {
     m_leftLaunchMotor.stopMotor();
   }
 
-  public double CommandPower()
-  {  
-    if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
-    {  
-      double MaxPower = 1;
-      double MinPower = 0.6;
-      double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-      distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
-      double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
-      return MaxPower + normalized * (MinPower - MaxPower);
-    }
-    else
-    {
-      return 0;
-    }
-  }
-
   public double CommandRPM()
   {    
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
-    {/* 
-      double distance = -LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-      distance = Math.max(Constants.TargetingDistance.minDistance, Math.min(Constants.TargetingDistance.maxDistance, distance));
-      double normalized = (distance - Constants.TargetingDistance.minDistance) / (Constants.TargetingDistance.maxDistance - Constants.TargetingDistance.minDistance);
-      return Constants.Shooter.MaxRPM + normalized * (Constants.Shooter.MinRPM - Constants.Shooter.MaxRPM);
-      */
-      
+    {      
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);  
       if (distance>-2) 
       {
-      return MathUtil.clamp(-65.6735 * distance + 4004.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 4004.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else if (distance>-12 && distance<=-2) 
       {
-      return MathUtil.clamp(-65.6735 * distance + 3104.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 3104.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else if(distance<=-12 && distance>-20)
       {
-      return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else if (distance<=-20)
       {
-      return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else
       {
-      return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
     }
     else

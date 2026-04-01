@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Hood;
-import frc.robot.Constants.LimeLight;
 import frc.robot.classes.LimelightHelpers;
 
 public class subHood extends SubsystemBase {
@@ -25,6 +24,7 @@ public class subHood extends SubsystemBase {
   private final TalonFX m_hoodMotor = new TalonFX(Hood.motorId, canbus); 
   private final PositionVoltage m_hoodPositionVoltage = new PositionVoltage(0).withSlot(0);
   private final NeutralOut m_brake = new NeutralOut();
+  private double currentHoodCommand = 0;
     
   public subHood() {
     ConfigureHood();
@@ -81,12 +81,20 @@ public class subHood extends SubsystemBase {
 
   public void setPosition()
   {
-    m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(hoodPositionCommand()));
+    if(currentHoodCommand != hoodPositionCommand())
+    {
+      currentHoodCommand = hoodPositionCommand();
+      m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(currentHoodCommand));
+    }
   }
   public void setPosition(double position)
   {
-    SmartDashboard.putNumber("Hood Command", position);
-    m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(position));
+    if(currentHoodCommand != position)
+    {
+      currentHoodCommand = position;
+      SmartDashboard.putNumber("Hood Command", currentHoodCommand);
+      m_hoodMotor.setControl(m_hoodPositionVoltage.withPosition(currentHoodCommand));
+    }
   }
 
   public void ResetEncoder(){
@@ -106,13 +114,8 @@ public class subHood extends SubsystemBase {
   {
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {
-      /*double distance = LimelightHelpers.getTY(LimeLight.shooterTargetingName);
-      distance = Math.max(Constants.Hood.bottomPosition, Math.min(Constants.Hood.topPosition, distance));
-      double normalized = (distance - Constants.Hood.bottomPosition) / (Constants.Hood.topPosition - Constants.Hood.bottomPosition);
-      return Constants.Hood.topPosition + normalized * (Constants.Hood.bottomPosition - Constants.Hood.topPosition);
-      */
-       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-     return MathUtil.clamp(-0.011 * distance +.481, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
+      return MathUtil.clamp(-0.011 * distance +.481, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
     }
     else
     {
