@@ -5,22 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Shoot"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "DriveBackALittle"
-                }
-              }
-            ]
+            "pathName": "DriveBackALittle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Align Shoot and Move"
           }
         },
         {
@@ -49,15 +42,40 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "ScootUpFromDepot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Auto Align Shoot and Move"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "DepotToClimb"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "DepotToClimb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climb Raise Auto"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb Lower Auto"
           }
         }
       ]

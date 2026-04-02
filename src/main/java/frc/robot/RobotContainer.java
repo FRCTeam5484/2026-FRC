@@ -72,8 +72,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(4));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdClimb_Lower(climb).withTimeout(4));
         NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(5));
-        NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper));
-        NamedCommands.registerCommand("Auto Retract Hopper", new cmdHopper_Retract(hopper));
+        NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper).withTimeout(2));
+        NamedCommands.registerCommand("Auto Retract Hopper", new cmdHopper_Retract(hopper).withTimeout(2));
         NamedCommands.registerCommand("Auto Run Intake", new cmdIntake_TeleOp(intake, ()->0.7).withTimeout(5));
         
         DriverStation.silenceJoystickConnectionWarning(true);
