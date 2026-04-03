@@ -42,25 +42,13 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "ScootUpFromDepot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Align Shoot and Move"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "DepotToClimb"
+                  "pathName": "ScootUpFromDepot"
                 }
               },
               {
@@ -70,6 +58,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Align Shoot and Move"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DepotToClimb"
           }
         },
         {
