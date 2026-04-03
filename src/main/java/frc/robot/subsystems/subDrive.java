@@ -271,6 +271,7 @@ public class subDrive extends TunerSwerveDrivetrain implements Subsystem {
                         ? kRedAlliancePerspectiveRotation
                         : kBlueAlliancePerspectiveRotation
                 );
+                //if(allianceColor == Alliance.Red ? lime)
                 m_hasAppliedOperatorPerspective = true;
             });
         }

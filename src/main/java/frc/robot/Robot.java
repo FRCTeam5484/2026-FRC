@@ -4,7 +4,12 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.HootAutoReplay;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -40,8 +45,23 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_robotContainer.lime.enablePose();
-        m_robotContainer.lime.setMode4();
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.isPresent()){
+            if (ally.get() == Alliance.Red) {
+                m_robotContainer.lime.disablePose();
+            }
+            else if(ally.get() == Alliance.Blue) {
+                m_robotContainer.lime.enablePose();
+                m_robotContainer.lime.setMode4();
+            }
+            else {
+                m_robotContainer.lime.disablePose();
+            }
+        }
+        else {
+            m_robotContainer.lime.disablePose();
+        }
+        
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
