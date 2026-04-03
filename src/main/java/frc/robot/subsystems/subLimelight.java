@@ -19,6 +19,7 @@ public class subLimelight extends SubsystemBase {
     sendDashboard();
     updateFrontPose();        
     updateBackPose();
+    SmartDashboard.putNumber("Targeting TY", LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName));
   }
   private void updateFrontPose(){
     if (UseFrontLimelight) {
