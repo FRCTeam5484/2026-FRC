@@ -126,12 +126,6 @@ public class RobotContainer {
         driverOne.leftBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
         driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
         driverOne.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
-        
-        /// Intake Controls
-        driverOne.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
-        driverOne.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
-        driverOne.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
-        driverOne.rightTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
 
         /// Limelight Enable/Disable
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
@@ -153,9 +147,15 @@ public class RobotContainer {
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
 
-        /// Climb Control        
-        driverTwo.leftBumper().whileTrue(new cmdClimb_Lower(climb));
-        driverTwo.rightBumper().whileTrue(new cmdClimb_Raise(climb));
+        /// Intake Controls
+        driverTwo.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
+        driverTwo.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
+        driverTwo.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
+        driverTwo.rightTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));        
+        
+        /// Climb Control
+        //driverTwo.leftBumper().whileTrue(new cmdClimb_Lower(climb));
+        //driverTwo.rightBumper().whileTrue(new cmdClimb_Raise(climb));
 
         /// Hood Control
         driverTwo.povUp().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
