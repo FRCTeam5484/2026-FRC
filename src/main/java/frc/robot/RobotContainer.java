@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.classes.Telemetry;
@@ -54,6 +55,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
     private final CommandXboxController driverOne = new CommandXboxController(0);
     private final CommandXboxController driverTwo = new CommandXboxController(1);
+    private final CommandXboxController driverThree = new CommandXboxController(2);
     public final subDrive drivetrain = TunerConstants.createDrivetrain();
     public final subBed bed = new subBed();
     public final subClimb climb = new subClimb();
@@ -82,7 +84,8 @@ public class RobotContainer {
 
         FollowPathCommand.warmupCommand().schedule();
 
-        ConfigureTeleOpControls();
+        //ConfigureTeleOpControls();
+        ConfigureDriverThree();
     }
 
     public Command getAutonomousCommand() {
@@ -120,13 +123,6 @@ public class RobotContainer {
         /// Reset Heading
         driverOne.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        /// Hopper Controls
-        driverOne.y().onTrue(new InstantCommand(()-> hopper.ResetEncoder(), hopper));
-        driverOne.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
-        driverOne.leftBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
-        driverOne.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
-        driverOne.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
-
         /// Limelight Enable/Disable
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
         driverOne.back().onTrue(new InstantCommand(()->lime.toggleFront()));
@@ -147,6 +143,13 @@ public class RobotContainer {
         // Unjam
         driverTwo.b().whileTrue(new cmdAuto_Unjam(bed, feeder, shooter));
 
+        /// Hopper Controls
+        //driver.y().onTrue(new InstantCommand(()-> hopper.ResetEncoder(), hopper));
+        driverTwo.leftBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->-0.2));
+        driverTwo.leftBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+        driverTwo.rightBumper().whileTrue(new cmdHopper_TeleOp(hopper, ()->0.2));
+        driverTwo.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+
         /// Intake Controls
         driverTwo.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
         driverTwo.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
@@ -160,5 +163,44 @@ public class RobotContainer {
         /// Hood Control
         driverTwo.povUp().whileTrue(new cmdHood_TeleOp(hood, ()->0.1));
         driverTwo.povDown().whileTrue(new cmdHood_TeleOp(hood, ()->-0.1));
+    }
+    private void ConfigureDriverThree(){
+        ////////////////////////////////////////
+        /*  DriverThree Controls for Testing  */
+        ////////////////////////////////////////       
+        
+        /// Drive Default
+        drivetrain.setDefaultCommand(
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driverThree.getLeftY()  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverThree.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverThree.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
+
+        driverThree.a().whileTrue(new RunCommand(()->shooter.TeleOp(.5), shooter));
+        driverThree.a().onFalse(new InstantCommand(()->shooter.Stop(), shooter));
+        driverThree.b().whileTrue(new RunCommand(()->feeder.TeleOp(.5), feeder));
+        driverThree.b().onFalse(new InstantCommand(()->feeder.Stop(), feeder));
+        driverThree.x().whileTrue(new RunCommand(()->hopper.TeleOp(.5), hopper));
+        driverThree.x().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+        driverThree.y().whileTrue(new RunCommand(()->hopper.TeleOp(-.5), hopper));
+        driverThree.y().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
+
+        driverThree.povUp().whileTrue(new RunCommand(()->hood.TeleOpNoSafe(.1), hood));
+        driverThree.povUp().onFalse(new InstantCommand(()->hood.Stop(), hood));
+        driverThree.povDown().whileTrue(new RunCommand(()->hood.TeleOpNoSafe(-.1), hood));
+        driverThree.povDown().onFalse(new InstantCommand(()->hood.Stop(), hood));
+
+        driverThree.povLeft().whileTrue(new RunCommand(()->climb.TeleOp(.2), climb));
+        driverThree.povLeft().onFalse(new InstantCommand(()->climb.Stop(), climb));
+        driverThree.povRight().whileTrue(new RunCommand(()->climb.TeleOp(-.2), climb));
+        driverThree.povRight().onFalse(new InstantCommand(()->climb.Stop(), climb)); 
+
+        driverThree.leftBumper().whileTrue(new RunCommand(()->intake.TeleOp(.5), intake));
+        driverThree.leftBumper().onFalse(new InstantCommand(()->intake.Stop(), intake));
+        driverThree.rightBumper().whileTrue(new RunCommand(()->bed.TeleOp(.5), bed));
+        driverThree.rightBumper().onFalse(new InstantCommand(()->bed.Stop(), bed));
+
     }
 }
