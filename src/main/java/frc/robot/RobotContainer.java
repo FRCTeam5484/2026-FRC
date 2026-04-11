@@ -84,8 +84,8 @@ public class RobotContainer {
 
         FollowPathCommand.warmupCommand().schedule();
 
-        //ConfigureTeleOpControls();
-        ConfigureDriverThree();
+        ConfigureTeleOpControls();
+        //ConfigureDriverThree();
     }
 
     public Command getAutonomousCommand() {
@@ -151,9 +151,9 @@ public class RobotContainer {
         driverTwo.rightBumper().onFalse(new InstantCommand(()->hopper.Stop(), hopper));
 
         /// Intake Controls
-        driverTwo.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
+        driverTwo.leftTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
         driverTwo.leftTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));
-        driverTwo.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->.7));
+        driverTwo.rightTrigger().whileTrue(new cmdIntake_TeleOp(intake, ()->-.7));
         driverTwo.rightTrigger().onFalse(new InstantCommand(()->intake.Stop(), intake));        
         
         /// Climb Control

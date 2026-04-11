@@ -108,18 +108,18 @@ public class subShooter extends SubsystemBase {
       }
       else if(distance<=-12 && distance>-20)
       {
-        //return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-        return MathUtil.clamp(-63.6735 * distance + 2800.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        //return MathUtil.clamp(-63.6735 * distance + 2800.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else if (distance<=-20)
       {
-        //return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-        return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        //return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else
       {
-        //return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-        return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        //return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
     }
     else
