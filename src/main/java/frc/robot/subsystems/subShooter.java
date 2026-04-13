@@ -97,28 +97,25 @@ public class subShooter extends SubsystemBase {
   {    
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {      
+      
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);  
-      if (distance>-2) 
+      //return MathUtil.clamp(-34.16088 * distance + 3703.9041, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+      if (distance > 6) // close 24 to -2
       {
-        return MathUtil.clamp(-65.6735 * distance + 4004.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-34.16088 * distance + 3703.9041, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
-      else if (distance>-12 && distance<=-2) 
+      else if (distance>-3 && distance<=6) // middle -2 to -12
       {
-        return MathUtil.clamp(-65.6735 * distance + 3104.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-38.16088 * distance + 3603.9041, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
-      else if(distance<=-12 && distance>-20)
+      else if(distance<=-3) // far-12 to -20
       {
-        return MathUtil.clamp(-63.6735 * distance + 3000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-40.16088 * distance + 3703.9041, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
         //return MathUtil.clamp(-63.6735 * distance + 2800.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-      }
-      else if (distance<=-20)
-      {
-        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
-        //return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
       else
       {
-        return MathUtil.clamp(-65.6735 * distance + 4000.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
+        return MathUtil.clamp(-36.16088 * distance + 3703.9041, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
         //return MathUtil.clamp(-65.6735 * distance + 3700.4898, Constants.Shooter.MinRPM, Constants.Shooter.MaxRPM);
       }
     }

@@ -9,6 +9,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.fasterxml.jackson.databind.jsontype.impl.MinimalClassNameIdResolver;
+
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Hood;
+import frc.robot.Constants.TargetingDistance;
 import frc.robot.classes.LimelightHelpers;
 
 public class subHood extends SubsystemBase {
@@ -115,8 +118,11 @@ public class subHood extends SubsystemBase {
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-      return MathUtil.clamp(-0.011 * distance +3, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      //return MathUtil.clamp(-0.011 * distance + 3, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
       //return MathUtil.clamp(-0.011 * distance +.481, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      //double hoodSlope = (Constants.Hood.bottomPosition - Constants.Hood.topPosition) / (Constants.TargetingDistance.minDistance - Constants.TargetingDistance.maxDistance);
+      //return MathUtil.clamp(hoodSlope * distance + 2.475, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      return MathUtil.clamp(-0.0578125 * distance + 3.02188, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
     }
     else
     {
