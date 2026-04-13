@@ -38,21 +38,17 @@ public class subShooter extends SubsystemBase {
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private double currentRPMCommand = 0;
   private ShuffleboardTab tab = Shuffleboard.getTab("ManualShooter");
-  private GenericEntry RPM = tab.add("RPM Speed", 2000).getEntry();
+  private GenericEntry RPMSpeed = tab.add("RPM Speed", 2000)
+    .withWidget(BuiltInWidgets.kNumberSlider)
+    .withProperties(Map.of("min", 2000, "max", 6000))
+    .getEntry();
   
   public subShooter() {
-    ConfigureShooter();
-
-    Shuffleboard.getTab("ManualShooter")
-      .add("RPM Speed", 2000)
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("min", 2000, "max", 6000))
-      .getEntry();
+    ConfigureShooter();          
   }
 
   @Override
   public void periodic() {
-    RPM = tab.add("RPM Speed", 2000).getEntry();
     isShooterAtSpeed();
     SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
@@ -99,7 +95,7 @@ public class subShooter extends SubsystemBase {
   }
 
   public void setShooterDashboardRPM() {
-    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(RPM.getDouble(0) / 60));
+    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(RPMSpeed.getDouble(0) / 60));
   }
   
   public void isShooterAtSpeed() {
