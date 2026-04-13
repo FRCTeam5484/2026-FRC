@@ -5,6 +5,8 @@ import frc.robot.Constants;
 import frc.robot.classes.LimelightHelpers;
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Map;
+
 import javax.lang.model.util.ElementScanner14;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -19,6 +21,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class subShooter extends SubsystemBase {
@@ -31,19 +37,27 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private double currentRPMCommand = 0;
+  private ShuffleboardTab tab = Shuffleboard.getTab("ManualShooter");
+  private GenericEntry RPM = tab.add("RPM Speed", 2000).getEntry();
   
   public subShooter() {
     ConfigureShooter();
+
+    Shuffleboard.getTab("ManualShooter")
+      .add("RPM Speed", 2000)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", 2000, "max", 6000))
+      .getEntry();
   }
 
   @Override
   public void periodic() {
+    RPM = tab.add("RPM Speed", 2000).getEntry();
     isShooterAtSpeed();
     SmartDashboard.putNumber("Shooter RPS Command", CommandRPM()/60);
     SmartDashboard.putNumber("Shooter RPS", m_leftLaunchMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter At Speed", shooterAtSpeed);
     SmartDashboard.putNumber("Shooter RPM Command", CommandRPM());
-
     
   }
 
@@ -70,8 +84,7 @@ public class subShooter extends SubsystemBase {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
     m_rightLaunchMotor.setControl(new Follower(m_leftLaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
-  }
-  
+  }  
   
   public void TeleOp(double speed) {
     m_leftLaunchMotor.set(Math.abs(speed) <= 0.1 ? 0 : speed);
@@ -83,6 +96,10 @@ public class subShooter extends SubsystemBase {
       currentRPMCommand = CommandRPM();
       m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(currentRPMCommand / 60));
     }
+  }
+
+  public void setShooterDashboardRPM() {
+    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(RPM.getDouble(0) / 60));
   }
   
   public void isShooterAtSpeed() {

@@ -31,6 +31,7 @@ import frc.robot.commands.cmdHopper_Extend;
 import frc.robot.commands.cmdHopper_Retract;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
+import frc.robot.commands.cmdShooter_TestRPM;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
@@ -126,6 +127,10 @@ public class RobotContainer {
         /// Limelight Enable/Disable
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
         driverOne.back().onTrue(new InstantCommand(()->lime.toggleFront()));
+
+        // Shooter Test
+        driverOne.a().whileTrue(new cmdShooter_TestRPM(shooter));
+        driverOne.a().onFalse(new InstantCommand(()->shooter.Stop(), shooter));
 
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
