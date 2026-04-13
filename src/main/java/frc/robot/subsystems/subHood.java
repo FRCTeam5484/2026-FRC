@@ -115,7 +115,8 @@ public class subHood extends SubsystemBase {
     if(LimelightHelpers.getTV(Constants.LimeLight.shooterTargetingName))
     {
       double distance = LimelightHelpers.getTY(Constants.LimeLight.shooterTargetingName);
-      return MathUtil.clamp(-0.011 * distance +.481, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      return MathUtil.clamp(-0.011 * distance +3, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
+      //return MathUtil.clamp(-0.011 * distance +.481, Constants.Hood.bottomPosition, Constants.Hood.topPosition);
     }
     else
     {
