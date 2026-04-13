@@ -128,10 +128,6 @@ public class RobotContainer {
         driverOne.start().onTrue(new InstantCommand(()->lime.toggleBack()));
         driverOne.back().onTrue(new InstantCommand(()->lime.toggleFront()));
 
-        // Shooter Test
-        driverOne.a().whileTrue(new cmdShooter_TestRPM(shooter));
-        driverOne.a().onFalse(new InstantCommand(()->shooter.Stop(), shooter));
-
         /////////////////////////////////////
         /*  DriverTwo Controls for TeleOp  */
         /////////////////////////////////////

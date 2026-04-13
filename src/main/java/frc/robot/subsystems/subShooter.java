@@ -37,11 +37,6 @@ public class subShooter extends SubsystemBase {
   private final TalonFX m_rightLaunchMotor = new TalonFX(Constants.Shooter.rightMotorId, canbus);  
   private final VelocityVoltage m_shooterVelocityVoltage = new VelocityVoltage(0).withSlot(0);
   private double currentRPMCommand = 0;
-  private ShuffleboardTab tab = Shuffleboard.getTab("ManualShooter");
-  private GenericEntry RPMSpeed = tab.add("RPM Speed", 2000)
-    .withWidget(BuiltInWidgets.kNumberSlider)
-    .withProperties(Map.of("min", 2000, "max", 6000))
-    .getEntry();
   
   public subShooter() {
     ConfigureShooter();          
@@ -92,10 +87,6 @@ public class subShooter extends SubsystemBase {
       currentRPMCommand = CommandRPM();
       m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(currentRPMCommand / 60));
     }
-  }
-
-  public void setShooterDashboardRPM() {
-    m_leftLaunchMotor.setControl(m_shooterVelocityVoltage.withVelocity(RPMSpeed.getDouble(0) / 60));
   }
   
   public void isShooterAtSpeed() {
