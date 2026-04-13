@@ -31,7 +31,6 @@ import frc.robot.commands.cmdHopper_Extend;
 import frc.robot.commands.cmdHopper_Retract;
 import frc.robot.commands.cmdHopper_TeleOp;
 import frc.robot.commands.cmdIntake_TeleOp;
-import frc.robot.commands.cmdShooter_TestRPM;
 import frc.robot.subsystems.subBed;
 import frc.robot.subsystems.subClimb;
 import frc.robot.subsystems.subDrive;
