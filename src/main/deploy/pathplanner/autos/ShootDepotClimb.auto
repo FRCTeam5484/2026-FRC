@@ -17,12 +17,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto Align Shoot and Move"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Auto Extend Hopper"
                 }
               },
