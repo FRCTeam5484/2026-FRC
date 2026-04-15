@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DriveBackALittle"
+            "pathName": "TrenchScootBack"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Auto Shoot"
+            "name": "Auto Align Shoot and Move"
           }
         },
         {
@@ -23,28 +23,35 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FromShootToClimb"
+                  "pathName": "ScootFromTrench"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Climb Raise Auto"
+                  "name": "Auto Extend Hopper"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "DriveIntoClimb"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb Lower Auto"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToNeutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto Run Intake"
+                }
+              }
+            ]
           }
         }
       ]

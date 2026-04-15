@@ -5,25 +5,19 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "DriveBackALittle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Align Shoot and Move"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FromShootToDepot"
+                  "pathName": "HubToDepot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto Align Shoot and Move"
                 }
               },
               {
@@ -37,24 +31,24 @@
                 "data": {
                   "name": "Auto Run Intake"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climb Raise Auto"
+                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
                   "pathName": "ScootUpFromDepot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Climb Raise Auto"
                 }
               }
             ]
@@ -67,9 +61,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "DepotToClimb"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "DepotToClimb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto Retract Hopper"
+                }
+              }
+            ]
           }
         },
         {

@@ -70,8 +70,8 @@ public class RobotContainer {
     public RobotContainer() {
         // Named Commands
         NamedCommands.registerCommand("Shooter DeadCode", new cmdAuto_DeadcodeShoot(bed, feeder, shooter, intake, 0.70).withTimeout(4));
-        NamedCommands.registerCommand("Auto Shoot", new cmdAuto_AutoShoot(hood, shooter, bed, feeder).withTimeout(5));
-        NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(4));
+        NamedCommands.registerCommand("Auto Shoot", new cmdAuto_AutoShoot(hood, shooter, bed, feeder).withTimeout(4));
+        NamedCommands.registerCommand("Climb Raise Auto", new cmdClimb_Raise(climb).withTimeout(3));
         NamedCommands.registerCommand("Climb Lower Auto", new cmdClimb_Lower(climb).withTimeout(4));
         NamedCommands.registerCommand("Auto Align Shoot and Move", new cmdAuto_AutoAlignShootMove(drivetrain, hood, shooter, bed, feeder, intake, ()->0.2).withTimeout(5));
         NamedCommands.registerCommand("Auto Extend Hopper", new cmdHopper_Extend(hopper).withTimeout(2));
