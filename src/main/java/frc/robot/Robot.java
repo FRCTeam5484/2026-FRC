@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        /*
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.isPresent()){
             if (ally.get() == Alliance.Red) {
@@ -61,7 +62,9 @@ public class Robot extends TimedRobot {
         else {
             m_robotContainer.lime.disablePose();
         }
-        
+        */
+        m_robotContainer.lime.enablePose();
+        m_robotContainer.lime.setMode4();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
