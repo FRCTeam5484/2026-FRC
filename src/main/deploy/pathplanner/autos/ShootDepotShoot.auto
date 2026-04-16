@@ -5,22 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Shoot"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "DriveBackALittle"
-                }
-              }
-            ]
+            "pathName": "DriveBackALittle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Shoot"
           }
         },
         {
@@ -49,9 +42,34 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto Run Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ScootUpFromDepot"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Auto Align and Shoot"
+            "name": "Auto Align Shoot and Move"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Retract Hopper"
           }
         },
         {

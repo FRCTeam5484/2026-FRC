@@ -23,22 +23,28 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto Run Intake"
+                  "name": "Climb Raise Auto"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Climb Raise Auto"
+                  "name": "Auto Run Intake"
                 }
               }
             ]
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto Run Intake"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -55,6 +61,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Auto Retract Hopper"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Align Shoot and Move"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -62,12 +80,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "DepotToClimb"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Retract Hopper"
                 }
               }
             ]
