@@ -195,7 +195,7 @@ public class subDrive extends TunerSwerveDrivetrain implements Subsystem {
         }
     }
 
-    private void configureAutoBuilder() {
+    public void configureAutoBuilder() {
         try {
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(

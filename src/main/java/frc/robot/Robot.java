@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
             m_robotContainer.lime.disablePose();
         }
         */
+        m_robotContainer.drivetrain.configureAutoBuilder();
         m_robotContainer.lime.enablePose();
         m_robotContainer.lime.setMode4();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
