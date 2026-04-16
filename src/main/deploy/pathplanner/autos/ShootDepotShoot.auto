@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "HubToDepot"
+                  "pathName": "ShootToDepot"
                 }
               },
               {
