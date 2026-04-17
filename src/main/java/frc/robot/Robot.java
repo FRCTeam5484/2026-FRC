@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.classes.LimelightHelpers;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.isPresent() && ally.get() == Alliance.Red) {
             m_robotContainer.drivetrain.resetRotation(Rotation2d.fromDegrees(180));
+            LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionBackRight, 180, 0, 0, 0, 0, 0);
         }
         m_robotContainer.lime.enablePose();
         m_robotContainer.lime.setMode4();
