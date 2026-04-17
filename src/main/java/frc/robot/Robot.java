@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.isPresent() && ally.get() == Alliance.Red) {
             m_robotContainer.drivetrain.resetRotation(Rotation2d.fromDegrees(180));
-            m_robotContainer.lime.updatePose();
         }
         m_robotContainer.lime.enablePose();
         m_robotContainer.lime.setMode4();
