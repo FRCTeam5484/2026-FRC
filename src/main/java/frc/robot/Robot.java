@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -45,25 +46,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        /*
         Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent()){
-            if (ally.get() == Alliance.Red) {
-                m_robotContainer.lime.disablePose();
-            }
-            else if(ally.get() == Alliance.Blue) {
-                m_robotContainer.lime.enablePose();
-                m_robotContainer.lime.setMode4();
-            }
-            else {
-                m_robotContainer.lime.disablePose();
-            }
+        if (ally.isPresent() && ally.get() == Alliance.Red) {
+            m_robotContainer.drivetrain.resetRotation(Rotation2d.fromDegrees(180));
+            m_robotContainer.lime.updatePose();
         }
-        else {
-            m_robotContainer.lime.disablePose();
-        }
-        */
-        m_robotContainer.drivetrain.configureAutoBuilder();
         m_robotContainer.lime.enablePose();
         m_robotContainer.lime.setMode4();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
