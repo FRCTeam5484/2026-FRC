@@ -34,7 +34,7 @@ public class cmdAuto_AutoRelayToAlliance extends Command {
     shooter.TeleOp(1);
     if(timer.get() > 1){
      feeder.TeleOp(1);
-      bed.TeleOp(1);
+      bed.TeleOp(.7);
     }
   }
 

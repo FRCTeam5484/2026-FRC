@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -23,7 +24,14 @@ public class subFeeder extends SubsystemBase {
   @Override
   public void periodic() {}
   private void ConfigureFeeder(){
-    TalonFXConfiguration configs = new TalonFXConfiguration();
+    TalonFXConfiguration configs = new TalonFXConfiguration()
+    .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                // Swerve azimuth does not require much torque output, so we can set a relatively low
+                // stator current limit to help avoid brownouts without impacting performance.
+                .withStatorCurrentLimit(Amps.of(30))
+                .withStatorCurrentLimitEnable(true)
+        );;
 
     // Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor
     configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward

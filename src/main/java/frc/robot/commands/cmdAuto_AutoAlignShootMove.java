@@ -66,7 +66,7 @@ public class cmdAuto_AutoAlignShootMove extends Command {
       if(timer.get() > 1){
         intake.TeleOp(.5);
         feeder.TeleOp(1);
-        bed.TeleOp(1);
+        bed.TeleOp(.7);
       }
     }
     else
