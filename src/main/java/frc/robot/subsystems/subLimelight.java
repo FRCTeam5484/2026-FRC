@@ -7,7 +7,7 @@ import frc.robot.Constants;
 import frc.robot.classes.LimelightHelpers;
 
 public class subLimelight extends SubsystemBase {
-  private boolean UseBackLimelight = false;
+  private boolean UseBackLimelight = true;
   subDrive drive;
   public subLimelight(subDrive drive) {
     this.drive = drive;
@@ -57,7 +57,7 @@ public class subLimelight extends SubsystemBase {
     LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 1);
   }
   public void setMode4(){
-    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 4);
+    LimelightHelpers.SetIMUMode(Constants.LimeLight.fieldPositionBackRight, 2);
   }
   public boolean backHasTarget(){
     return LimelightHelpers.getTV(Constants.LimeLight.fieldPositionBackRight);

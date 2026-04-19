@@ -40,21 +40,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        //m_robotContainer.lime.setMode1();
+        m_robotContainer.lime.setMode1();
     }
     @Override
     public void disabledExit() {}
 
     @Override
     public void autonomousInit() {
-        /*
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent() && ally.get() == Alliance.Red) {
-            m_robotContainer.drivetrain.resetRotation(Rotation2d.fromDegrees(180));
-            LimelightHelpers.SetRobotOrientation(Constants.LimeLight.fieldPositionBackRight, 180, 0, 0, 0, 0, 0);
-        }
         m_robotContainer.lime.enablePose();
-        m_robotContainer.lime.setMode4(); */
+        m_robotContainer.lime.setMode4();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
